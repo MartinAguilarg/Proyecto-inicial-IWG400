@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db.models import F
 from django.db.models.functions import Abs
 from .models import Desafio
+from .models import Equipo, Partido, Desafio
+from django.db.models import Q
 def registro(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -176,3 +178,23 @@ def responder_desafio(request, desafio_id, accion):
             desafio.save()
             
     return redirect('bandeja_desafios')
+def inicio(request):
+    equipos = Equipo.objects.all().order_by('-elo')
+    es_capitan = False
+    partidos_activos = None
+    
+    if request.user.is_authenticated:
+        equipo_qs = Equipo.objects.filter(capitan=request.user)
+        if equipo_qs.exists():
+            es_capitan = True
+            mi_equipo = equipo_qs.first()
+            # Busca partidos de este equipo que aún no estén confirmados
+            partidos_activos = Partido.objects.filter(
+                Q(equipo_1=mi_equipo) | Q(equipo_2=mi_equipo)
+            ).exclude(estado='confirmado')
+    
+    return render(request, 'registration/inicio.html', {
+        'equipos': equipos,
+        'es_capitan': es_capitan,
+        'partidos_activos': partidos_activos
+    })

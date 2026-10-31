@@ -1,0 +1,44 @@
+<div style="max-width: 800px; margin: 0 auto; font-family: sans-serif;">
+    <h1>🏆 Ranking Global (Elo)</h1>
+
+    {% if user.is_authenticated and es_capitan %}
+        <div style="background-color: #f0f0f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <h3>Panel de Capitán: {{ user.username }}</h3>
+            <div style="margin-bottom: 15px;">
+                <a href="{% url 'radar' %}"><button style="padding: 10px; cursor: pointer; background-color: #2196F3; color: white; border: none; border-radius: 4px;">Radar de Desafíos</button></a>
+                <a href="{% url 'bandeja_desafios' %}"><button style="padding: 10px; cursor: pointer; background-color: #FF9800; color: white; border: none; border-radius: 4px;">Bandeja de Entrada</button></a>
+            </div>
+            
+            <h4>⚽ Mis Partidos Activos</h4>
+            {% if partidos_activos %}
+                <ul style="list-style-type: none; padding: 0;">
+                {% for partido in partidos_activos %}
+                    <li style="background-color: white; padding: 10px; border: 1px solid #ccc; margin-bottom: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                        <span><strong>{{ partido.equipo_1.nombre }}</strong> vs <strong>{{ partido.equipo_2.nombre }}</strong> ({{ partido.get_estado_display }})</span>
+                        <a href="{% url 'reportar_partido' partido.id %}"><button style="padding: 5px 10px; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 4px;">Reportar / Ver</button></a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: #666;">No tienes partidos pendientes.</p>
+            {% endif %}
+        </div>
+    {% else %}
+        <p><a href="/cuentas/login/" style="color: #2196F3; font-weight: bold;">Iniciar sesión para gestionar tu equipo</a></p>
+    {% endif %}
+
+    <table style="width: 100%; border-collapse: collapse; text-align: left; margin-top: 20px;">
+        <tr style="background-color: #333; color: white;">
+            <th style="padding: 10px;">Posición</th>
+            <th style="padding: 10px;">Equipo</th>
+            <th style="padding: 10px;">Puntaje Elo</th>
+        </tr>
+        {% for equipo in equipos %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 10px;">#{{ forloop.counter }}</td>
+            <td style="padding: 10px;"><strong>{{ equipo.nombre }}</strong></td>
+            <td style="padding: 10px;">{{ equipo.elo }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
