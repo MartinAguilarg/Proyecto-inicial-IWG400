@@ -1,0 +1,6 @@
+<h2>Registro en Los Proyectados</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Crear cuenta</button>
+</form>
