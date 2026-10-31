@@ -1,0 +1,22 @@
+{% extends 'registration/base.html' %}
+
+{% block content %}
+    <h2>Panel Principal</h2>
+    {% if user.is_authenticated and es_capitan %}
+        <h3> Mis Partidos Activos</h3>
+        {% if partidos_activos %}
+            <ul style="list-style-type: none; padding: 0;">
+            {% for partido in partidos_activos %}
+                <li style="padding: 10px; border: 1px solid #ccc; margin-bottom: 8px; border-radius: 4px; display: flex; justify-content: space-between;">
+                    <span><strong>{{ partido.equipo_1.nombre }}</strong> vs <strong>{{ partido.equipo_2.nombre }}</strong></span>
+                    <a href="{% url 'reportar_partido' partido.id %}" style="background-color: #4CAF50; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px;">Reportar</a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tienes partidos pendientes actualmente.</p>
+        {% endif %}
+    {% else %}
+        <p>Bienvenido. Utiliza el menú superior para navegar o iniciar sesión.</p>
+    {% endif %}
+{% endblock %}

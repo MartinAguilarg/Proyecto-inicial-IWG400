@@ -1,0 +1,68 @@
+{% extends 'registration/base.html' %}
+
+{% block content %}
+<h2> Sala de Coordinación</h2>
+
+{% for partido in partidos %}
+    <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f9f9f9;">
+        <h3>{{ partido.equipo_1.nombre }} vs {{ partido.equipo_2.nombre }}</h3>
+        
+        <!-- Búsqueda de Google Maps por Comuna -->
+        <div style="background-color: #e3f2fd; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+            <strong> Buscar recintos cercanos:</strong><br>
+            <a href="https://www.google.com/maps/search/canchas+de+futbol+en+{{ partido.equipo_1.capitan.perfil.comuna }}" target="_blank" style="color: #1976D2; text-decoration: none;">🗺️ En {{ partido.equipo_1.capitan.perfil.comuna }} (Local)</a> | 
+            <a href="https://www.google.com/maps/search/canchas+de+futbol+en+{{ partido.equipo_2.capitan.perfil.comuna }}" target="_blank" style="color: #1976D2; text-decoration: none;">🗺️ En {{ partido.equipo_2.capitan.perfil.comuna }} (Visita)</a>
+        </div>
+
+        {% if partido.estado_coordinacion == 'propuesto' %}
+            <!-- VISTA 1: Cuando ya hay una propuesta sobre la mesa -->
+            <div style="background-color: #fff9c4; padding: 15px; border-radius: 4px; margin-bottom: 15px; border-left: 4px solid #FFC107;">
+                <p style="margin: 0 0 10px 0;"><strong>Propuesta Actual:</strong></p>
+                <p style="margin: 5px 0;"> {{ partido.fecha_programada|date:"Y-m-d" }} a las ⏰ {{ partido.hora_programada }}</p>
+                <p style="margin: 5px 0;"> <strong>Cancha:</strong> {{ partido.lugar_acordado }}</p>
+                <p style="margin: 5px 0;"> <strong>Camisetas:</strong> {{ partido.equipo_1.nombre }} ({{ partido.color_equipo_1 }}) | {{ partido.equipo_2.nombre }} ({{ partido.color_equipo_2 }})</p>
+            </div>
+            
+            {% if partido.proponente == user %}
+                <!-- VISTA 1A: Si yo envié la propuesta, debo esperar -->
+                <div style="background-color: #e3f2fd; padding: 10px; border-radius: 4px; margin-bottom: 10px; text-align: center;">
+                    <p style="margin: 0; color: #1976D2;"> <strong>Esperando respuesta del rival...</strong></p>
+                </div>
+            {% else %}
+                <!-- VISTA 1B: Si el rival envió la propuesta, yo puedo aceptar o rechazar -->
+                <form method="post" action="{% url 'proponer_horario' partido.id %}" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    {% csrf_token %}
+                    <button type="submit" name="aceptar" value="1" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; flex-grow: 1;">✅ Aceptar Propuesta</button>
+                    <button type="submit" name="rechazar" value="1" style="background-color: #f44336; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; flex-grow: 1;">❌ Rechazar / Contraofertar</button>
+                </form>
+            {% endif %}
+
+        {% elif partido.estado_coordinacion == 'sin_fecha' %}
+            <!-- VISTA 2: Cuando no hay propuesta o acaba de ser rechazada (Formulario vacío) -->
+            <div style="background-color: #e8f5e9; padding: 10px; border-radius: 4px; margin-bottom: 10px;">
+                <p style="margin: 0; color: #2e7d32;"><strong>Es tu turno:</strong> Define los detalles del partido para enviarle una propuesta al rival.</p>
+            </div>
+
+            <form method="post" action="{% url 'proponer_horario' partido.id %}" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                {% csrf_token %}
+                <input type="date" name="fecha" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="time" name="hora" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="text" name="lugar" placeholder="Nombre de la cancha" required style="padding: 8px; width: 180px; border: 1px solid #ccc; border-radius: 4px;">
+                
+                <input type="text" name="color_1" placeholder="Color de {{ partido.equipo_1.nombre }}" required style="padding: 8px; width: 160px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="text" name="color_2" placeholder="Color de {{ partido.equipo_2.nombre }}" required style="padding: 8px; width: 160px; border: 1px solid #ccc; border-radius: 4px;">
+                
+                <button type="submit" style="background-color: #2196F3; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Enviar Propuesta</button>
+            </form>
+            
+        {% elif partido.estado_coordinacion == 'aceptado' %}
+            <!-- Fallback visual (aunque filtrado en la vista) -->
+            <p style="color: green;"><strong> Partido Confirmado.</strong> Revisa la pestaña de Calendario.</p>
+        {% endif %}
+    </div>
+{% empty %}
+    <div style="text-align: center; padding: 40px; background-color: #f9f9f9; border-radius: 8px;">
+        <p style="color: #666; font-size: 1.1em;">No tienes partidos en proceso de coordinación en este momento.</p>
+    </div>
+{% endfor %}
+{% endblock %}

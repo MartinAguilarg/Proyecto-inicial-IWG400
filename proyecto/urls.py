@@ -1,22 +1,22 @@
-"""
-URL configuration for proyecto project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
-
+from django.urls import path, include
+from torneo import views
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.inicio, name='inicio'),
+    path('cuentas/', include('django.contrib.auth.urls')),
+    path('registro/', views.registro, name='registro'),
+    path('partido/<int:partido_id>/reportar/', views.reportar_partido, name='reportar_partido'),
+    path('radar/', views.radar_desafios, name='radar'),
+    path('desafio/enviar/<int:retado_id>/', views.enviar_desafio, name='enviar_desafio'),
+    path('bandeja/', views.bandeja_desafios, name='bandeja_desafios'),
+    path('desafio/responder/<int:desafio_id>/<str:accion>/', views.responder_desafio, name='responder_desafio'),
+    path('perfil/<int:equipo_id>/', views.perfil_equipo, name='perfil_equipo'),
+    path('ranking/', views.ranking, name='ranking'),
+    path('mi_perfil/', views.mi_perfil, name='mi_perfil'),
+    path('calendario/', views.calendario, name='calendario'),
+    path('coordinar/<int:partido_id>/', views.proponer_horario, name='proponer_horario'),
+    path('coordinacion/', views.coordinacion, name='coordinacion'),
+    path('coordinar/<int:partido_id>/', views.proponer_horario, name='proponer_horario'),
+    path('calendario/', views.calendario, name='calendario'),
 ]
