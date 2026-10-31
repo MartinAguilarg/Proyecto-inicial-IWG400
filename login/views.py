@@ -44,38 +44,66 @@ def calcular_elo(elo_a, elo_b, goles_a, goles_b):
         nuevo_elo_a -= bonus
         
     return int(nuevo_elo_a), int(nuevo_elo_b)
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Partido
 
+@login_required
 def reportar_partido(request, partido_id):
-    # Busca el partido dentro de la base de datos
     partido = get_object_or_404(Partido, id=partido_id)
-    
+    usuario_actual = request.user
+
+    # Verificar si el usuario es capitán de alguno de los dos equipos
+    es_capitan_1 = partido.equipo_1.capitan == usuario_actual
+    es_capitan_2 = partido.equipo_2.capitan == usuario_actual
+
+    if not es_capitan_1 and not es_capitan_2 and not usuario_actual.is_staff:
+        return redirect('login') # O una vista de error/prohibido
+
     if request.method == 'POST':
-        # Anota los goles del formulario
         goles_1 = int(request.POST.get('goles_1', 0))
         goles_2 = int(request.POST.get('goles_2', 0))
-        
-        # Guarda los goles y cambia el estado del partido
-        partido.goles_equipo_1 = goles_1
-        partido.goles_equipo_2 = goles_2
-        partido.estado = 'Confirmado'
-        partido.save()
-        
-        # Usa la funcion del calculo de elo
-        nuevo_elo_1, nuevo_elo_2 = calcular_elo(
-            partido.equipo_1.elo, 
-            partido.equipo_2.elo, 
-            goles_1, 
-            goles_2
-        )
-        
-        # Actualiza y guarda los nuevos puntajes de los equipos
-        partido.equipo_1.elo = nuevo_elo_1
-        partido.equipo_2.elo = nuevo_elo_2
-        partido.equipo_1.save()
-        partido.equipo_2.save()
-        
-        return redirect('login') 
-        
-    return render(request, 'registration/reportar_partido.html', {'partido': partido})
+
+        # caso 1: El capitan 1 reporta por primera vez
+        if es_capitan_1 and partido.estado in ['pendiente', 'disputa']:
+            partido.goles_1_c1 = goles_1
+            partido.goles_2_c1 = goles_2
+            partido.estado = 'esperando_c2'
+            partido.save()
+
+        # caso 2: El capitan 2 responde al reporte
+        elif es_capitan_2 and partido.estado == 'esperando_c2':
+            partido.goles_1_c2 = goles_1
+            partido.goles_2_c2 = goles_2
+
+            # Verificamos si los resultados coinciden
+            if partido.goles_1_c1 == goles_1 and partido.goles_2_c1 == goles_2:
+                # coinciden, se oficializa el resultado
+                partido.goles_equipo_1 = goles_1
+                partido.goles_equipo_2 = goles_2
+                partido.estado = 'confirmado'
+                partido.save()
+
+                # hacer calculo de elo
+                nuevo_elo_1, nuevo_elo_2 = calcular_elo(
+                    partido.equipo_1.elo, 
+                    partido.equipo_2.elo, 
+                    goles_1, 
+                    goles_2
+                )
+                partido.equipo_1.elo = nuevo_elo_1
+                partido.equipo_2.elo = nuevo_elo_2
+                partido.equipo_1.save()
+                partido.equipo_2.save()
+            else:
+                # No coinciden, Disputa abierta
+                partido.estado = 'disputa'
+                partido.save()
+
+        return redirect('login')
+
+    return render(request, 'registration/reportar_partido.html', {
+        'partido': partido, 
+        'es_capitan_1': es_capitan_1, 
+        'es_capitan_2': es_capitan_2
+    })
