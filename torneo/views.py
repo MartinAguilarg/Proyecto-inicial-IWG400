@@ -5,16 +5,21 @@ from django.db.models.functions import Abs
 from .models import Desafio
 from .models import Equipo, Partido, Desafio
 from django.db.models import Q
+from .forms import RegistroCapitanForm
+from .models import Perfil
+
 def registro(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = RegistroCapitanForm(request.POST)
         if form.is_valid():
-            form.save()
+            usuario = form.save()
+            telefono = form.cleaned_data.get('telefono')
+            comuna = form.cleaned_data.get('comuna')
+            Perfil.objects.create(usuario=usuario, telefono=telefono, comuna=comuna)
             return redirect('login')
     else:
-        form = UserCreationForm()
+        form = RegistroCapitanForm()
     return render(request, 'registration/registro.html', {'form': form})
-from .models import Equipo, Partido
 
 def calcular_elo(elo_a, elo_b, goles_a, goles_b):
     K = 32 #cantidad max de puntos base
@@ -179,7 +184,6 @@ def responder_desafio(request, desafio_id, accion):
             
     return redirect('bandeja_desafios')
 def inicio(request):
-    equipos = Equipo.objects.all().order_by('-elo')
     es_capitan = False
     partidos_activos = None
     
@@ -188,13 +192,89 @@ def inicio(request):
         if equipo_qs.exists():
             es_capitan = True
             mi_equipo = equipo_qs.first()
-            # Busca partidos de este equipo que aún no estén confirmados
             partidos_activos = Partido.objects.filter(
                 Q(equipo_1=mi_equipo) | Q(equipo_2=mi_equipo)
             ).exclude(estado='confirmado')
-    
+            
     return render(request, 'registration/inicio.html', {
-        'equipos': equipos,
         'es_capitan': es_capitan,
         'partidos_activos': partidos_activos
     })
+
+def ranking(request):
+    equipos = Equipo.objects.all().order_by('-elo')
+    return render(request, 'registration/ranking.html', {'equipos': equipos})
+
+@login_required
+def mi_perfil(request):
+    # Encuentra el equipo del usuario activo y lo redirige a su propio perfil
+    mi_equipo = get_object_or_404(Equipo, capitan=request.user)
+    return redirect('perfil_equipo', equipo_id=mi_equipo.id)
+def perfil_equipo(request, equipo_id):
+    equipo = get_object_or_404(Equipo, id=equipo_id)
+    capitan = equipo.capitan
+    
+    # extrae el telefono
+    telefono = capitan.perfil.telefono if hasattr(capitan, 'perfil') else "Sin teléfono registrado"
+    
+    # Busca solo los partidos terminados y confirmados del equipo del capitan
+    historial = Partido.objects.filter(
+        (Q(equipo_1=equipo) | Q(equipo_2=equipo)) & Q(estado='confirmado')
+    ).order_by('-id')
+
+    victorias, derrotas, empates = 0, 0, 0
+    goles_a_favor, goles_en_contra = 0, 0
+
+    # Calcula las estadisticas recorriendo el historial
+    for partido in historial:
+        if partido.equipo_1 == equipo:
+            goles_a_favor += partido.goles_equipo_1
+            goles_en_contra += partido.goles_equipo_2
+            if partido.goles_equipo_1 > partido.goles_equipo_2: victorias += 1
+            elif partido.goles_equipo_1 < partido.goles_equipo_2: derrotas += 1
+            else: empates += 1
+        else:
+            goles_a_favor += partido.goles_equipo_2
+            goles_en_contra += partido.goles_equipo_1
+            if partido.goles_equipo_2 > partido.goles_equipo_1: victorias += 1
+            elif partido.goles_equipo_2 < partido.goles_equipo_1: derrotas += 1
+            else: empates += 1
+
+    contexto = {
+        'equipo': equipo,
+        'capitan': capitan,
+        'telefono': telefono,
+        'historial': historial,
+        'partidos_jugados': historial.count(),
+        'victorias': victorias,
+        'derrotas': derrotas,
+        'empates': empates,
+        'goles_a_favor': goles_a_favor,
+        'goles_en_contra': goles_en_contra,
+    }
+    
+    return render(request, 'registration/perfil.html', contexto)
+@login_required
+def calendario(request):
+    mi_equipo = get_object_or_404(Equipo, capitan=request.user)
+    partidos = Partido.objects.filter(
+        (Q(equipo_1=mi_equipo) | Q(equipo_2=mi_equipo))
+    ).exclude(estado='confirmado')
+    
+    return render(request, 'registration/calendario.html', {'partidos': partidos, 'mi_equipo': mi_equipo})
+
+@login_required
+def proponer_horario(request, partido_id):
+    partido = get_object_or_404(Partido, id=partido_id)
+    
+    if request.method == 'POST':
+        if 'aceptar' in request.POST:
+            partido.estado_coordinacion = 'aceptado'
+        else:
+            partido.fecha_programada = request.POST.get('fecha')
+            partido.hora_programada = request.POST.get('hora')
+            partido.lugar_acordado = request.POST.get('lugar') # Guarda la cancha
+            partido.estado_coordinacion = 'propuesto'
+        partido.save()
+        
+    return redirect('calendario')

@@ -1,3 +1,5 @@
+{% extends 'registration/base.html' %}
+<br>{% block content %}
 <h2>Bandeja de Entrada - {{ mi_equipo.nombre }}</h2>
 
 {% if desafios %}
@@ -23,3 +25,4 @@
 {% else %}
     <p>No tienes nuevos desafíos pendientes.</p>
 {% endif %}
+{% endblock %}

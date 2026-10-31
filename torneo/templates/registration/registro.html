@@ -1,6 +1,8 @@
-<h2>Registro en Los Proyectados</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Crear cuenta</button>
-</form>
+<div style="max-width: 400px; margin: 0 auto; font-family: sans-serif;">
+    <h2>Registro de Capitán</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; width: 100%; cursor: pointer;">Registrarse</button>
+    </form>
+</div>

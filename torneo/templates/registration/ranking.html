@@ -1,0 +1,19 @@
+{% extends 'registration/base.html' %}
+
+{% block content %}
+    <h2>🏆 Ranking Global (Elo)</h2>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <tr style="background-color: #333; color: white;">
+            <th style="padding: 10px;">Pos</th>
+            <th style="padding: 10px;">Equipo</th>
+            <th style="padding: 10px;">Elo</th>
+        </tr>
+        {% for equipo in equipos %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 10px;">#{{ forloop.counter }}</td>
+            <td style="padding: 10px;"><strong><a href="{% url 'perfil_equipo' equipo.id %}" style="text-decoration: none; color: #2196F3;">{{ equipo.nombre }}</a></strong></td>
+            <td style="padding: 10px;">{{ equipo.elo }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

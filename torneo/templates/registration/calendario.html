@@ -1,0 +1,47 @@
+{% extends 'registration/base.html' %}
+
+{% block content %}
+<h2>📅 Calendario y Coordinación</h2>
+
+{% for partido in partidos %}
+    <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f9f9f9;">
+        <h3>{{ partido.equipo_1.nombre }} vs {{ partido.equipo_2.nombre }}</h3>
+        
+        
+        <div style="background-color: #e3f2fd; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+            <strong>📍 Buscar recintos cercanos:</strong><br>
+            <a href="https://www.google.com/maps/search/canchas+de+futbol+en+{{ partido.equipo_1.capitan.perfil.comuna }}" target="_blank" style="color: #1976D2; text-decoration: none;">🗺️ En {{ partido.equipo_1.capitan.perfil.comuna }} (Local)</a> | 
+            <a href="https://www.google.com/maps/search/canchas+de+futbol+en+{{ partido.equipo_2.capitan.perfil.comuna }}" target="_blank" style="color: #1976D2; text-decoration: none;">🗺️ En {{ partido.equipo_2.capitan.perfil.comuna }} (Visita)</a>
+        </div>
+
+        {% if partido.estado_coordinacion == 'sin_fecha' or partido.estado_coordinacion == 'propuesto' %}
+            {% if partido.estado_coordinacion == 'propuesto' %}
+                <div style="background-color: #fff9c4; padding: 10px; border-radius: 4px; margin-bottom: 10px;">
+                    <p style="margin: 0;"><strong>Propuesta Actual:</strong></p>
+                    <p style="margin: 5px 0;">📅 {{ partido.fecha_programada }} a las ⏰ {{ partido.hora_programada }}</p>
+                    <p style="margin: 0;">📍 <strong>Cancha:</strong> {{ partido.lugar_acordado }}</p>
+                </div>
+            {% else %}
+                <p>⏳ Esperando propuesta de partido.</p>
+            {% endif %}
+            
+            <form method="post" action="{% url 'proponer_horario' partido.id %}" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                {% csrf_token %}
+                <input type="date" name="fecha" required style="padding: 5px;">
+                <input type="time" name="hora" required style="padding: 5px;">
+                <input type="text" name="lugar" placeholder="Nombre de la cancha o link" required style="padding: 5px; width: 200px;">
+                <button type="submit" style="background-color: #2196F3; color: white; padding: 5px 15px; border: none; border-radius: 4px; cursor: pointer;">Proponer</button>
+                
+                {% if partido.estado_coordinacion == 'propuesto' %}
+                    <button type="submit" name="aceptar" value="1" style="background-color: #4CAF50; color: white; padding: 5px 15px; border: none; border-radius: 4px; cursor: pointer;">✅ Aceptar Propuesta</button>
+                {% endif %}
+            </form>
+        {% elif partido.estado_coordinacion == 'aceptado' %}
+            <p style="color: green;"><strong>✅ Partido Confirmado:</strong> {{ partido.fecha_programada }} a las {{ partido.hora_programada }} en <strong>{{ partido.lugar_acordado }}</strong></p>
+            <a href="{% url 'reportar_partido' partido.id %}"><button style="background-color: #FF9800; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Ir a Reportar Resultado</button></a>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No tienes partidos en proceso de coordinación.</p>
+{% endfor %}
+{% endblock %}

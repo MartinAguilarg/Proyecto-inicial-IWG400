@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -10,32 +11,19 @@ class Equipo(models.Model):
         return self.nombre
 
 class Partido(models.Model):
-    ESTADOS = [
-        ('pendiente', 'Pendiente'),
-        ('esperando_c2', 'Esperando confirmación del Capitán 2'),
-        ('confirmado', 'Confirmado'),
-        ('disputa', 'En Disputa'),
-    ]
-
-    equipo_1 = models.ForeignKey(Equipo, related_name='partidos_1', on_delete=models.CASCADE)
-    equipo_2 = models.ForeignKey(Equipo, related_name='partidos_2', on_delete=models.CASCADE)
+    equipo_1 = models.ForeignKey(Equipo, related_name='partidos_local', on_delete=models.CASCADE)
+    equipo_2 = models.ForeignKey(Equipo, related_name='partidos_visita', on_delete=models.CASCADE)
+    goles_equipo_1 = models.IntegerField(default=0)
+    goles_equipo_2 = models.IntegerField(default=0)
+    estado = models.CharField(max_length=20, default='pendiente')
     
-    # Resultado oficial 
-    goles_equipo_1 = models.IntegerField(null=True, blank=True)
-    goles_equipo_2 = models.IntegerField(null=True, blank=True)
-    
-    # Reporte del Capitán 1
-    goles_1_c1 = models.IntegerField(null=True, blank=True)
-    goles_2_c1 = models.IntegerField(null=True, blank=True)
-    
-    # Reporte del Capitán 2
-    goles_1_c2 = models.IntegerField(null=True, blank=True)
-    goles_2_c2 = models.IntegerField(null=True, blank=True)
-    
-    estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
-
+    # nuevo campo para calendario
+    fecha_programada = models.DateField(null=True, blank=True)
+    hora_programada = models.TimeField(null=True, blank=True)
+    estado_coordinacion = models.CharField(max_length=20, default='sin_fecha')
+    lugar_acordado = models.CharField(max_length=150, null=True, blank=True)
     def __str__(self):
-        return f"{self.equipo_1} vs {self.equipo_2} ({self.estado})"
+        return f"{self.equipo_1} vs {self.equipo_2}"
 class Desafio(models.Model):
     ESTADOS_DESAFIO = [
         ('pendiente', 'Pendiente'),
@@ -50,3 +38,10 @@ class Desafio(models.Model):
 
     def __str__(self):
         return f"{self.retador.nombre} reta a {self.retado.nombre} ({self.estado})"
+class Perfil(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil')
+    telefono = models.CharField(max_length=20)
+    comuna = models.CharField(max_length=50, default="Por definir")
+
+    def __str__(self):
+        return f"Perfil de {self.usuario.username}"
