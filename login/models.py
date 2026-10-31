@@ -36,3 +36,17 @@ class Partido(models.Model):
 
     def __str__(self):
         return f"{self.equipo_1} vs {self.equipo_2} ({self.estado})"
+class Desafio(models.Model):
+    ESTADOS_DESAFIO = [
+        ('pendiente', 'Pendiente'),
+        ('aceptado', 'Aceptado'),
+        ('rechazado', 'Rechazado'),
+    ]
+    
+    retador = models.ForeignKey(Equipo, related_name='desafios_enviados', on_delete=models.CASCADE)
+    retado = models.ForeignKey(Equipo, related_name='desafios_recibidos', on_delete=models.CASCADE)
+    estado = models.CharField(max_length=20, choices=ESTADOS_DESAFIO, default='pendiente')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.retador.nombre} reta a {self.retado.nombre} ({self.estado})"

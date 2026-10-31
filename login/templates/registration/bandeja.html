@@ -1,0 +1,25 @@
+<h2>Bandeja de Entrada - {{ mi_equipo.nombre }}</h2>
+
+{% if desafios %}
+    <ul style="list-style: none; padding: 0;">
+    {% for desafio in desafios %}
+        <li style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
+            <p> El equipo <strong>{{ desafio.retador.nombre }}</strong> (Elo: {{ desafio.retador.elo }}) te ha desafiado.</p>
+            
+            <div style="display: flex; gap: 10px;">
+                <form method="post" action="{% url 'responder_desafio' desafio.id 'aceptar' %}">
+                    {% csrf_token %}
+                    <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">Aceptar y Jugar</button>
+                </form>
+                
+                <form method="post" action="{% url 'responder_desafio' desafio.id 'rechazar' %}">
+                    {% csrf_token %}
+                    <button type="submit" style="background-color: #f44336; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">Rechazar</button>
+                </form>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No tienes nuevos desafíos pendientes.</p>
+{% endif %}

@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-
+from django.db.models import F
+from django.db.models.functions import Abs
+from .models import Desafio
 def registro(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -107,3 +109,70 @@ def reportar_partido(request, partido_id):
         'es_capitan_1': es_capitan_1, 
         'es_capitan_2': es_capitan_2
     })
+@login_required
+def radar_desafios(request):
+    # Identificamos el equipo del usuario conectado
+    mi_equipo = get_object_or_404(Equipo, capitan=request.user)
+    
+    # excluimos a nuestro propio equipo de la busqueda
+    otros_equipos = Equipo.objects.exclude(id=mi_equipo.id)
+
+    #  duelo justo
+    duelo_justo = otros_equipos.annotate(
+        diferencia=Abs(F('elo') - mi_equipo.elo)
+    ).order_by('diferencia').first()
+
+    # el equipo mas cercano por debajo del elo
+    underdog = otros_equipos.filter(elo__lt=mi_equipo.elo).order_by('-elo').first()
+
+    # 3. el jefe con mas elo en toda la plataforma
+    jefe = otros_equipos.filter(elo__gt=mi_equipo.elo).order_by('-elo').first()
+
+    contexto = {
+        'mi_equipo': mi_equipo,
+        'duelo_justo': duelo_justo,
+        'underdog': underdog,
+        'jefe': jefe,
+    }
+    
+    return render(request, 'registration/radar.html', contexto)
+@login_required
+def enviar_desafio(request, retado_id):
+    if request.method == 'POST':
+        mi_equipo = get_object_or_404(Equipo, capitan=request.user)
+        equipo_retado = get_object_or_404(Equipo, id=retado_id)
+        
+        # Genera el registro del reto en la base de datos
+        Desafio.objects.create(retador=mi_equipo, retado=equipo_retado)
+        
+    return redirect('radar')
+@login_required
+def bandeja_desafios(request):
+    mi_equipo = get_object_or_404(Equipo, capitan=request.user)
+    # Filtra solo los desafíos que nos han enviado y no se han respondido
+    desafios_pendientes = Desafio.objects.filter(retado=mi_equipo, estado='pendiente')
+    
+    return render(request, 'registration/bandeja.html', {
+        'mi_equipo': mi_equipo,
+        'desafios': desafios_pendientes
+    })
+
+@login_required
+def responder_desafio(request, desafio_id, accion):
+    desafio = get_object_or_404(Desafio, id=desafio_id, retado__capitan=request.user)
+    
+    if request.method == 'POST':
+        if accion == 'aceptar':
+            desafio.estado = 'aceptado'
+            desafio.save()
+            # Al aceptar, se crea el partido
+            Partido.objects.create(
+                equipo_1=desafio.retador, 
+                equipo_2=desafio.retado, 
+                estado='pendiente'
+            )
+        elif accion == 'rechazar':
+            desafio.estado = 'rechazado'
+            desafio.save()
+            
+    return redirect('bandeja_desafios')
