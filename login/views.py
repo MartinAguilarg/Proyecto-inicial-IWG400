@@ -44,3 +44,38 @@ def calcular_elo(elo_a, elo_b, goles_a, goles_b):
         nuevo_elo_a -= bonus
         
     return int(nuevo_elo_a), int(nuevo_elo_b)
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Partido
+
+def reportar_partido(request, partido_id):
+    # Busca el partido dentro de la base de datos
+    partido = get_object_or_404(Partido, id=partido_id)
+    
+    if request.method == 'POST':
+        # Anota los goles del formulario
+        goles_1 = int(request.POST.get('goles_1', 0))
+        goles_2 = int(request.POST.get('goles_2', 0))
+        
+        # Guarda los goles y cambia el estado del partido
+        partido.goles_equipo_1 = goles_1
+        partido.goles_equipo_2 = goles_2
+        partido.estado = 'Confirmado'
+        partido.save()
+        
+        # Usa la funcion del calculo de elo
+        nuevo_elo_1, nuevo_elo_2 = calcular_elo(
+            partido.equipo_1.elo, 
+            partido.equipo_2.elo, 
+            goles_1, 
+            goles_2
+        )
+        
+        # Actualiza y guarda los nuevos puntajes de los equipos
+        partido.equipo_1.elo = nuevo_elo_1
+        partido.equipo_2.elo = nuevo_elo_2
+        partido.equipo_1.save()
+        partido.equipo_2.save()
+        
+        return redirect('login') 
+        
+    return render(request, 'registration/reportar_partido.html', {'partido': partido})

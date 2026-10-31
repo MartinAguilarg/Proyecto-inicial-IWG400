@@ -1,0 +1,16 @@
+<h2>Reportar resultado: {{ partido.equipo_1.nombre }} vs {{ partido.equipo_2.nombre }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  
+  <label>Goles de {{ partido.equipo_1.nombre }}:</label>
+  <input type="number" name="goles_1" min="0" required>
+  
+  <br><br>
+  
+  <label>Goles de {{ partido.equipo_2.nombre }}:</label>
+  <input type="number" name="goles_2" min="0" required>
+  
+  <br><br>
+  <button type="submit">Guardar Resultado y Calcular Elo</button>
+</form>
