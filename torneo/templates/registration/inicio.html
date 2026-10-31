@@ -3,7 +3,7 @@
 {% block content %}
     <h2>Panel Principal</h2>
     {% if user.is_authenticated and es_capitan %}
-        <h3>⚽ Mis Partidos Activos</h3>
+        <h3> Mis Partidos Activos</h3>
         {% if partidos_activos %}
             <ul style="list-style-type: none; padding: 0;">
             {% for partido in partidos_activos %}

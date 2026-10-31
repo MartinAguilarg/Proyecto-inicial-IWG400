@@ -16,4 +16,7 @@ urlpatterns = [
     path('mi_perfil/', views.mi_perfil, name='mi_perfil'),
     path('calendario/', views.calendario, name='calendario'),
     path('coordinar/<int:partido_id>/', views.proponer_horario, name='proponer_horario'),
+    path('coordinacion/', views.coordinacion, name='coordinacion'),
+    path('coordinar/<int:partido_id>/', views.proponer_horario, name='proponer_horario'),
+    path('calendario/', views.calendario, name='calendario'),
 ]

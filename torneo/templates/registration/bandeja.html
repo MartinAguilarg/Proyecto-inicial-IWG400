@@ -1,28 +1,34 @@
 {% extends 'registration/base.html' %}
-<br>{% block content %}
-<h2>Bandeja de Entrada - {{ mi_equipo.nombre }}</h2>
 
-{% if desafios %}
-    <ul style="list-style: none; padding: 0;">
+{% block content %}
+<h2> Bandeja de Entrada (Desafíos Recibidos)</h2>
+
+<div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
     {% for desafio in desafios %}
-        <li style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
-            <p> El equipo <strong>{{ desafio.retador.nombre }}</strong> (Elo: {{ desafio.retador.elo }}) te ha desafiado.</p>
+        <div style="border: 1px solid #ddd; border-left: 5px solid #FF9800; padding: 20px; border-radius: 8px; background-color: #f9f9f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h3 style="margin-top: 0; color: #333;">⚔️ Reto de: {{ desafio.remitente.nombre }}</h3>
+                <p style="margin: 5px 0;"><strong> Elo del rival:</strong> {{ desafio.remitente.elo }}</p>
+                <p style="margin: 5px 0; font-size: 0.9em; color: #666;">Te han desafiado a un partido. ¿Aceptas el reto?</p>
+            </div>
             
             <div style="display: flex; gap: 10px;">
-                <form method="post" action="{% url 'responder_desafio' desafio.id 'aceptar' %}">
-                    {% csrf_token %}
-                    <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">Aceptar y Jugar</button>
-                </form>
+                <!-- Botón para Aceptar (redirige a la sala de coordinación según lo programado en views.py) -->
+                <a href="{% url 'responder_desafio' desafio.id 'aceptar' %}" style="text-decoration: none;">
+                    <button style="background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s;">✅ Aceptar y Proponer Hora</button>
+                </a>
                 
-                <form method="post" action="{% url 'responder_desafio' desafio.id 'rechazar' %}">
-                    {% csrf_token %}
-                    <button type="submit" style="background-color: #f44336; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">Rechazar</button>
-                </form>
+                <!-- Botón para Rechazar -->
+                <a href="{% url 'responder_desafio' desafio.id 'rechazar' %}" style="text-decoration: none;">
+                    <button style="background-color: #f44336; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s;">❌ Rechazar</button>
+                </a>
             </div>
-        </li>
+        </div>
+    {% empty %}
+        <div style="text-align: center; padding: 50px 20px; background-color: #fff; border: 1px dashed #ccc; border-radius: 8px;">
+            <p style="color: #666; font-size: 1.1em;">No tienes desafíos pendientes en este momento.</p>
+            <a href="{% url 'radar' %}" style="color: #2196F3; text-decoration: none; font-weight: bold;">📡 Ir al Radar a buscar equipos</a>
+        </div>
     {% endfor %}
-    </ul>
-{% else %}
-    <p>No tienes nuevos desafíos pendientes.</p>
-{% endif %}
+</div>
 {% endblock %}

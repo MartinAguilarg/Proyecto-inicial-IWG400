@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.auth.models import User
+
 
 class Equipo(models.Model):
     nombre = models.CharField(max_length=100)
@@ -21,7 +21,10 @@ class Partido(models.Model):
     fecha_programada = models.DateField(null=True, blank=True)
     hora_programada = models.TimeField(null=True, blank=True)
     estado_coordinacion = models.CharField(max_length=20, default='sin_fecha')
+    proponente = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     lugar_acordado = models.CharField(max_length=150, null=True, blank=True)
+    color_equipo_1 = models.CharField(max_length=50, null=True, blank=True)
+    color_equipo_2 = models.CharField(max_length=50, null=True, blank=True)
     def __str__(self):
         return f"{self.equipo_1} vs {self.equipo_2}"
 class Desafio(models.Model):
