@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>los proyectados</title>
+    <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
+</head>
+
+<body>
+    <header class="header">
+        <h1>los proyectados - login</h1>
+    </header>
+
+    <main class="login">
+        <section class="login_izq"></section>
+        <section class="login_der">
+            <h2>Bienvenido</h2>
+            <form method="post" class="login_form">
+                {% csrf_token %}
+
+                 <input type="email" name="email" placeholder="Correo electrónico" required>
+
+                <div class="campo_password">
+                     <input type="password" name="password" id="password" placeholder="Contraseña" required>
+                     <button type="button" id="ver_password">👁</button>
+                </div>
+
+                <button type="submit" class="btn_login">Iniciar sesión</button>
+            </form>
+
+            <a href="#" class="link">Recordar contraseña</a>
+            <p class="link">¿Todavía no tienes una cuenta? <a href="#">Regístrate</a></p>
+        </section>
+    </main>
+    <script>
+        const input = document.getElementById('password');
+        document.getElementById('ver_password').addEventListener('click', function () {
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+    </script>
+</body>
+</html>
