@@ -68,7 +68,8 @@ def inicio(request):
             es_capitan = True
             mi_equipo = equipo_qs.first()
             partidos_activos = Partido.objects.filter(
-                Q(equipo_1=mi_equipo) | Q(equipo_2=mi_equipo)
+                Q(equipo_1=mi_equipo) | Q(equipo_2=mi_equipo),
+                estado_coordinacion='aceptado'
             ).exclude(estado='confirmado')
             
     return render(request, 'registration/inicio.html', {
@@ -150,8 +151,12 @@ def perfil_equipo(request, equipo_id):
 @login_required
 def reportar_partido(request, partido_id):
     partido = get_object_or_404(Partido, id=partido_id)
-    usuario_actual = request.user
+    
+    if partido.estado == 'confirmado':
+        messages.warning(request, "Este partido ya fue confirmado y los puntos Elo fueron asignados.")
+        return redirect('inicio')
 
+    usuario_actual = request.user
     es_capitan_1 = partido.equipo_1.capitan == usuario_actual
     es_capitan_2 = partido.equipo_2.capitan == usuario_actual
 
@@ -177,7 +182,7 @@ def reportar_partido(request, partido_id):
             if partido.goles_1_c1 == goles_1 and partido.goles_2_c1 == goles_2:
                 partido.goles_equipo_1 = goles_1
                 partido.goles_equipo_2 = goles_2
-                partido.estado = 'confirmado'
+                partido.estado = 'confirmado' 
                 partido.save()
                 
                 nuevo_elo_1, nuevo_elo_2 = calcular_elo(

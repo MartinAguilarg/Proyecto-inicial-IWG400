@@ -127,5 +127,6 @@ MAILERS = {
     },
 }
 
-LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/cuentas/login/'
+LOGIN_REDIRECT_URL = 'inicio'
+LOGOUT_REDIRECT_URL = 'inicio'
