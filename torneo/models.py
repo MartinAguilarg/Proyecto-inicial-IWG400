@@ -18,6 +18,10 @@ class Partido(models.Model):
     estado = models.CharField(max_length=20, default='pendiente')
     
     # nuevo campo para calendario
+    goles_1_c1 = models.IntegerField(null=True, blank=True)
+    goles_2_c1 = models.IntegerField(null=True, blank=True)
+    goles_1_c2 = models.IntegerField(null=True, blank=True)
+    goles_2_c2 = models.IntegerField(null=True, blank=True)
     fecha_programada = models.DateField(null=True, blank=True)
     hora_programada = models.TimeField(null=True, blank=True)
     estado_coordinacion = models.CharField(max_length=20, default='sin_fecha')
