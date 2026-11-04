@@ -1,9 +1,50 @@
-<h2>Iniciar Sesión en Los Proyectados</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Entrar</button>
-</form>
-<div style="margin-top: 15px;">
-    <p>¿No tienes una cuenta de capitán? <a href="{% url 'registro' %}" style="color: #2196F3; text-decoration: none; font-weight: bold;">Regístrate aquí</a></p>
-</div>
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>los proyectados</title>
+    <link rel="stylesheet" href="{% static 'torneo/css/colores.css' %}">
+    <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
+</head>
+
+<body>
+    <header class="header">
+        <h1>los proyectados - login</h1>
+    </header>
+
+    <main class="login">
+        <section class="login_izq"></section>
+        <section class="login_der">
+            <h2>Bienvenido</h2>
+            <form method="post" class="login_form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+
+                {% if form.errors %}
+                    <p class="error">Usuario o contraseña incorrectos.</p>
+                {% endif %}
+
+                <input type="text" name="username" placeholder="Nombre de usuario" required>
+
+                <div class="campo_password">
+                    <input type="password" name="password" id="password" placeholder="Contraseña" required>
+                    <button type="button" id="ver_password">👁</button>
+                </div>
+
+                <button type="submit" class="btn_login">Iniciar sesión</button>
+            </form>
+
+            <a href="#" class="link">Recordar contraseña</a>
+            <p class="link">¿Todavía no tienes una cuenta? <a href="{% url 'registro' %}">Regístrate</a></p>
+        </section>
+    </main>
+    <script>
+        const input = document.getElementById('password');
+        document.getElementById('ver_password').addEventListener('click', function () {
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+    </script>
+</body>
+</html>
