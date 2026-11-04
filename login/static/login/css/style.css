@@ -5,15 +5,27 @@ body{
     display: flex;
     flex-direction: column;
 }
-/*header*/
-.header h1{
+.header h1 {
     display: flex;
     justify-content: center;
+    align-items: center;
     font-size: 50px;
     font-family: 'serif', serif, monospace;
     padding: 20px;
     background-color: #e6710b;
     color: #f2f2f2;
+}
+
+.header_logo {
+    height: 60px;
+    margin-right: 16px;
+}
+
+.error {
+    color: #fff;
+    background: #b71c1c;
+    padding: 8px;
+    border-radius: 6px;
 }
 /*mitad-mitad */
 .login {
@@ -23,9 +35,24 @@ body{
 }
 
 .login_izq {
-    background-color:#089603;
+    background-color: #089603;
+    position: relative;
+    overflow: hidden;
 }
 
+.login_foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.login_logo {
+    width: 60%;
+    max-width: 320px;
+    height: auto;
+}
 .login_der {
     background-color:#e6710b;
     display: flex;

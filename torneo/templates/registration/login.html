@@ -5,17 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>los proyectados</title>
-    <link rel="stylesheet" href="{% static 'torneo/css/colores.css' %}">
     <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
 </head>
 
 <body>
     <header class="header">
-        <h1>los proyectados - login</h1>
+        <h1>
+            <img src="{% static 'torneo/img/logo.png' %}" alt="" class="header_logo">
+            los proyectados 
+        </h1>
     </header>
 
     <main class="login">
-        <section class="login_izq"></section>
+        <section class="login_izq">
+          <img src="{% static 'torneo/img/cancha.png' %}" alt="" class="login_foto">
+        </section>
         <section class="login_der">
             <h2>Bienvenido</h2>
             <form method="post" class="login_form">
@@ -40,6 +44,7 @@
             <p class="link">¿Todavía no tienes una cuenta? <a href="{% url 'registro' %}">Regístrate</a></p>
         </section>
     </main>
+
     <script>
         const input = document.getElementById('password');
         document.getElementById('ver_password').addEventListener('click', function () {
