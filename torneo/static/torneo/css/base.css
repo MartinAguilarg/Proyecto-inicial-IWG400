@@ -1,0 +1,117 @@
+* { box-sizing: border-box; }
+
+body {
+    font-family: sans-serif;
+    background-color: #f5efe6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+.site_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 32px;
+    background-color: #e6710b;
+    margin-bottom: 20px;
+}
+
+.site_logo img {
+    height: 56px;
+    display: block;
+}
+
+.site_nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav_icon,
+.nav_text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    color: #f2f2f2;
+    text-decoration: none;
+    background: none;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.nav_text { padding: 8px 14px; }
+
+.nav_icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+.nav_icon:hover,
+.nav_text:hover,
+.dropdown:hover .nav_text {
+    background-color: #b95803;
+}
+
+/* Menú desplegable */
+.dropdown { position: relative; }
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 220px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px #b95803;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 12px 16px;
+    color: black;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover { background-color: #ddd; }
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content { display: block; }
+
+.logout_form { margin: 0; }
+
+/* Mensajes */
+.messages {
+    max-width: 900px;
+    margin: 0 auto 20px auto;
+}
+
+.msg {
+    padding: 15px;
+    border-radius: 4px;
+    color: white;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background-color: #2196F3;
+}
+
+.msg_success { background-color: #4CAF50; }
+.msg_error   { background-color: #f44336; }
+.msg_warning { background-color: #FF9800; }
+
+/* Contenedor de cada página */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
