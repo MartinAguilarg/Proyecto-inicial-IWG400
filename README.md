@@ -4,7 +4,7 @@ Aplicaci√≥n web desarrollada con **Python y Django** para conectar equipos de f√
 
 ## Requisitos
 
-- Python 3.12 o superior.
+- Python 3.15.2
 - pip (administrador de paquetes de Python).
 - Git (opcional, para clonar el repositorio).
 
