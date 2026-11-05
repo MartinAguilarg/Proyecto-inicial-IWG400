@@ -10,47 +10,65 @@ Aplicación web desarrollada con **Python y Django** para conectar equipos de f�
 
 ## Instalación y ejecución local
 
-Los siguientes comandos están pensados para Windows usando PowerShell.
+Los siguientes pasos están pensados para Windows utilizando la terminal de Visual Studio Code.
 
 1. **Descargar o clonar el repositorio** y abrir la carpeta del proyecto en Visual Studio Code.
 
-2. **Abrir una terminal** en la carpeta principal del proyecto. Debe ser la carpeta donde se encuentra el archivo `manage.py`.
+2. **Abrir una terminal** desde el menú Terminal → New Terminal.
 
-3. **Crear y activar un entorno virtual** (recomendado):
+3. 3. **Ubicarse en la carpeta principal del proyecto**, donde se encuentra el archivo `manage.py`.
+
+   Primero, ejecutar el siguiente comando para visualizar los archivos y carpetas del directorio actual:
 
    ```powershell
-   py -m venv venv
+   dir
+   ```
+
+   Si la carpeta del proyecto se encuentra dentro de otra carpeta, utilizar el comando `cd` seguido de su nombre para ingresar a ella. Por ejemplo:
+
+   ```powershell
+   cd Proyecto-inicial-IWG400
+   ```
+
+   Si se necesita regresar a la carpeta anterior, utilizar:
+
+   ```powershell
+   cd ..
+   ```
+
+   Una vez dentro de la carpeta principal, ejecutar nuevamente `dir` y comprobar que aparezca el archivo `manage.py`.
+4. **Crear un entorno virtual** para instalar las dependencias del proyecto:
+
+   ```powershell
+   python -m venv venv
+   ```
+
+   Activarlo con:
+
+   ```powershell
    .\venv\Scripts\Activate.ps1
    ```
 
-   Si PowerShell impide activar el entorno virtual, se puede ejecutar primero:
-
-   ```powershell
-   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-   ```
-
-   Luego, repetir el comando de activación.
-
-4. **Instalar Django**:
+5. **Instalar Django**:
 
    ```powershell
    python -m pip install --upgrade pip
    python -m pip install Django==6.1.1
    ```
 
-5. **Crear las tablas de la base de datos**:
+6. **Aplicar las migraciones** para crear las tablas de la base de datos:
 
    ```powershell
    python manage.py migrate
    ```
 
-6. **Iniciar el servidor de desarrollo**:
+7. **Iniciar el servidor de desarrollo**:
 
    ```powershell
    python manage.py runserver
    ```
 
-7. **Abrir la aplicación** en el navegador:
+8. **Abrir la aplicación** en el navegador mediante la siguiente dirección:
 
    http://127.0.0.1:8000/
 
