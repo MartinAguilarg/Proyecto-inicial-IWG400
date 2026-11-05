@@ -16,7 +16,7 @@ Los siguientes pasos están pensados para Windows utilizando la terminal de Visu
 
 2. **Abrir una terminal** desde el menú Terminal → New Terminal.
 
-3. 3. **Ubicarse en la carpeta principal del proyecto**, donde se encuentra el archivo `manage.py`.
+3. **Ubicarse en la carpeta principal del proyecto**, donde se encuentra el archivo `manage.py`.
 
    Primero, ejecutar el siguiente comando para visualizar los archivos y carpetas del directorio actual:
 
