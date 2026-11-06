@@ -3,9 +3,24 @@ from django.contrib.auth.models import User
 
 
 class Equipo(models.Model):
+    NIVELES = [
+        ('principiante', 'Principiante'),
+        ('intermedio', 'Intermedio'),
+        ('avanzado', 'Avanzado'),
+    ]
+    TIPOS = [
+        ('mixto', 'Mixto'),
+        ('masculino', 'Masculino'),
+        ('femenino', 'Femenino'),
+    ]
+
     nombre = models.CharField(max_length=100)
     capitan = models.ForeignKey(User, on_delete=models.CASCADE)
     elo = models.IntegerField(default=1000)
+    cantidad_jugadores = models.PositiveIntegerField(default=5)
+    tipo = models.CharField(max_length=20, choices=TIPOS, default='mixto')
+    nivel = models.CharField(max_length=20, choices=NIVELES, default='intermedio')
+
 
     def __str__(self):
         return self.nombre

@@ -8,6 +8,9 @@
         <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 5px solid #2196F3; flex: 1;">
             <h3 style="margin-top: 0;">Ficha del Equipo</h3>
             <p><strong>🛡️ Nombre:</strong> {{ equipo.nombre }}</p>
+            <p><strong>👥 Jugadores:</strong> {{ equipo.cantidad_jugadores }}</p>
+            <p><strong>⚽ Tipo:</strong> {{ equipo.get_tipo_display }}</p>
+            <p><strong>🎯 Nivel:</strong> {{ equipo.get_nivel_display }}</p>
             <p><strong>📈 Puntaje Elo:</strong> {{ equipo.elo }}</p>
             <p><strong>✉️ Correo:</strong> {{ capitan.email|default:"Sin email registrado" }}</p>
             <p><strong>📱 Teléfono:</strong> {{ telefono }}</p>
