@@ -1,78 +1,64 @@
-# Proyecto Inicial IWG400 – Plataforma de fútbol amateur
+## Proyecto Inicial IWG400 – Plataforma de fútbol amateur
 
-Aplicación web desarrollada con **Python y Django** para conectar equipos de fútbol amateur, gestionar desafíos, coordinar partidos y registrar sus resultados.
+Aplicación web desarrollada con Python y Django para conectar equipos de fútbol amateur, permitir el envío de desafíos, coordinar partidos y registrar sus resultados.
 
 ## Requisitos
 
-- Python 3.14.3
-- pip (administrador de paquetes de Python).
-- Git (opcional, para clonar el repositorio).
+Para ejecutar el proyecto se necesita:
+
+Python 3.14.3 o una versión compatible.
+
+Django 6.1.2.
 
 ## Instalación y ejecución local
 
-Los siguientes pasos están pensados para Windows utilizando la terminal de Visual Studio Code.
+Los siguientes pasos están pensados para Windows utilizando Visual Studio Code.
 
-1. **Descargar o clonar el repositorio** y abrir la carpeta del proyecto en Visual Studio Code.
+## 1. Descargar el repositorio
 
-2. **Abrir una terminal** desde el menú Terminal → New Terminal.
+Descargue el código del repositorio en formato ZIP y extraiga su contenido. Luego, abra la carpeta del proyecto en Visual Studio Code mediante File → Open Folder.
 
-3. **Ubicarse en la carpeta principal del proyecto**, donde se encuentra el archivo `manage.py`.
+## 2. Abrir una terminal
 
-   Primero, ejecutar el siguiente comando para visualizar los archivos y carpetas del directorio actual:
+En Visual Studio Code, abra una terminal desde Terminal → New Terminal.
 
-   ```powershell
-   dir
-   ```
+Verifique que la terminal se encuentre en la carpeta que contiene el archivo manage.py. Si el archivo se encuentra dentro de una subcarpeta, utilice el comando cd para ingresar a ella.
 
-   Si la carpeta del proyecto se encuentra dentro de otra carpeta, utilizar el comando `cd` seguido de su nombre para ingresar a ella. Por ejemplo:
+Por ejemplo:
 
-   ```powershell
-   cd Proyecto-inicial-IWG400
-   ```
+cd Proyecto-inicial-IWG400-main
 
-   Si se necesita regresar a la carpeta anterior, utilizar:
+Puede utilizar el comando:
 
-   ```powershell
-   cd ..
-   ```
+dir
 
-   Una vez dentro de la carpeta principal, ejecutar nuevamente `dir` y comprobar que aparezca el archivo `manage.py`.
-4. **Crear un entorno virtual** para instalar las dependencias del proyecto:
+para verificar que en la carpeta se encuentren archivos como manage.py y las carpetas del proyecto.
 
-   ```powershell
-   python -m venv venv
-   ```
+## 3. Instalar Django
 
-   Activarlo con:
+Ejecute el siguiente comando en la terminal:
 
-   ```powershell
-   .\venv\Scripts\Activate.ps1
-   ```
+python -m pip install Django==6.1.2
 
-5. **Instalar Django**:
+## 4. Crear las tablas necesarias
 
-   ```powershell
-   python -m pip install --upgrade pip
-   python -m pip install Django==6.1.1
-   ```
+Ejecute:
 
-6. **Aplicar las migraciones** para crear las tablas de la base de datos:
+python manage.py migrate
 
-   ```powershell
-   python manage.py migrate
-   ```
+## 5. Iniciar el servidor de Django
 
-7. **Iniciar el servidor de desarrollo**:
+Ejecute:
 
-   ```powershell
-   python manage.py runserver
-   ```
+python manage.py runserver
 
-8. **Abrir la aplicación** en el navegador mediante la siguiente dirección:
+La terminal mostrará una dirección similar a:
 
-   http://127.0.0.1:8000/
+http://127.0.0.1:8000/
 
-Para detener el servidor, volver a la terminal y presionar `Ctrl + C`.
+Abra esta dirección en un navegador para utilizar la aplicación.
+
+Para detener el servidor, presione Ctrl + C en la terminal.
 
 ## Datos para probar la funcionalidad principal
 
