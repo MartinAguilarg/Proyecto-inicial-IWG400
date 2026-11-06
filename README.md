@@ -1,64 +1,75 @@
-## Proyecto Inicial IWG400 – Plataforma de fútbol amateur
+# Proyecto Inicial IWG400 – Plataforma de fútbol amateur
 
-Aplicación web desarrollada con Python y Django para conectar equipos de fútbol amateur, permitir el envío de desafíos, coordinar partidos y registrar sus resultados.
+Aplicación web desarrollada con **Python y Django** para conectar equipos de fútbol amateur, permitir el envío de desafíos, coordinar partidos y registrar sus resultados.
 
 ## Requisitos
 
 Para ejecutar el proyecto se necesita:
 
-Python 3.14.3 o una versión compatible.
-
-Django 6.1.2.
+- Python 3.14.3 o una versión compatible.
+- Django 6.1.2.
 
 ## Instalación y ejecución local
 
-Los siguientes pasos están pensados para Windows utilizando Visual Studio Code.
+Los siguientes pasos están pensados para Windows utilizando **Visual Studio Code**.
 
-## 1. Descargar el repositorio
+### 1. Descargar el repositorio
 
-Descargue el código del repositorio en formato ZIP y extraiga su contenido. Luego, abra la carpeta del proyecto en Visual Studio Code mediante File → Open Folder.
+Descargue el código del repositorio en formato ZIP y extraiga su contenido. Luego, abra la carpeta del proyecto en Visual Studio Code mediante **File → Open Folder**.
 
-## 2. Abrir una terminal
+### 2. Abrir una terminal
 
-En Visual Studio Code, abra una terminal desde Terminal → New Terminal.
+En Visual Studio Code, abra una terminal desde **Terminal → New Terminal**.
 
-Verifique que la terminal se encuentre en la carpeta que contiene el archivo manage.py. Si el archivo se encuentra dentro de una subcarpeta, utilice el comando cd para ingresar a ella.
+Verifique que la terminal se encuentre en la carpeta que contiene el archivo `manage.py`. Si el archivo se encuentra dentro de una subcarpeta, utilice el comando `cd` para ingresar a ella.
 
 Por ejemplo:
 
+```text
 cd Proyecto-inicial-IWG400-main
+```
 
-Puede utilizar el comando:
+Puede utilizar el siguiente comando para verificar que se encuentra en la carpeta correcta:
 
+```text
 dir
+```
 
-para verificar que en la carpeta se encuentren archivos como manage.py y las carpetas del proyecto.
+En esta carpeta deberían aparecer el archivo `manage.py` y las carpetas del proyecto.
 
-## 3. Instalar Django
+### 3. Instalar Django
 
 Ejecute el siguiente comando en la terminal:
 
+```text
 python -m pip install Django==6.1.2
+```
 
-## 4. Crear las tablas necesarias
+### 4. Crear las tablas necesarias
 
 Ejecute:
 
+```text
 python manage.py migrate
+```
 
-## 5. Iniciar el servidor de Django
+### 5. Iniciar el servidor de Django
 
 Ejecute:
 
+```text
 python manage.py runserver
+```
 
 La terminal mostrará una dirección similar a:
 
+```text
 http://127.0.0.1:8000/
+```
 
 Abra esta dirección en un navegador para utilizar la aplicación.
 
-Para detener el servidor, presione Ctrl + C en la terminal.
+Para detener el servidor, presione `Ctrl + C` en la terminal.
 
 ## Datos para probar la funcionalidad principal
 
