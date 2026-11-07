@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 import re
 from .models import Equipo
 
-# Lista de comunas de la Provincia de Santiago (puedes agregar o quitar según prefieras)
+# Lista de comunas de la Provincia de Santiago 
 COMUNAS_SANTIAGO = [
     ('', 'Seleccione su comuna...'),
     ('Cerrillos', 'Cerrillos'),
@@ -82,5 +82,13 @@ class RegistroCapitanForm(UserCreationForm):
 class CrearEquipoForm(forms.ModelForm):
     class Meta:
         model = Equipo
-        fields = ['nombre']
-        labels = {'nombre': 'Nombre del Equipo'}
+        fields = ['nombre', 'cantidad_jugadores', 'tipo', 'nivel']
+        labels = {
+            'nombre': 'Nombre del Equipo',
+            'cantidad_jugadores': 'Cantidad de personas del equipo',
+            'tipo': 'Tipo de equipo',
+            'nivel': 'Experiencia del equipo',
+        }
+        widgets = {
+            'tipo': forms.RadioSelect,
+        }

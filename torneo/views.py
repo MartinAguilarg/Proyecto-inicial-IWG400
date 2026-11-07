@@ -7,9 +7,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, F
 from django.db.models.functions import Abs
+from django.contrib.auth import login
 
 from .models import Equipo, Partido, Desafio, Perfil
 from .forms import RegistroCapitanForm, CrearEquipoForm
+
+ELO_INICIAL = {'principiante': 900, 'intermedio': 1000, 'avanzado': 1100}
 
 def registro(request):
     if request.method == 'POST':
@@ -19,8 +22,9 @@ def registro(request):
             telefono = form.cleaned_data.get('telefono')
             comuna = form.cleaned_data.get('comuna')
             Perfil.objects.create(usuario=usuario, telefono=telefono, comuna=comuna)
-            messages.success(request, "Cuenta creada exitosamente. Ahora puedes iniciar sesión.")
-            return redirect('login')
+            login(request, usuario)
+            messages.success(request, "Cuenta creada. Ahora crea tu equipo.")
+            return redirect('crear_equipo')
     else:
         form = RegistroCapitanForm()
     return render(request, 'registration/registro.html', {'form': form})
@@ -92,7 +96,7 @@ def crear_equipo(request):
         if form.is_valid():
             equipo = form.save(commit=False)
             equipo.capitan = request.user
-            equipo.elo = 1000
+            equipo.elo = ELO_INICIAL[equipo.nivel]
             equipo.save()
             messages.success(request, "¡Tu equipo ha sido creado exitosamente!")
             return redirect('inicio')
@@ -103,7 +107,9 @@ def crear_equipo(request):
 
 @login_required
 def mi_perfil(request):
-    mi_equipo = get_object_or_404(Equipo, capitan=request.user)
+    mi_equipo = Equipo.objects.filter(capitan=request.user).first()
+    if mi_equipo is None:
+        return redirect('crear_equipo')
     return redirect('perfil_equipo', equipo_id=mi_equipo.id)
 
 def perfil_equipo(request, equipo_id):
@@ -319,4 +325,4 @@ def proponer_horario(request, partido_id):
             partido.estado_coordinacion = 'propuesto'
             messages.info(request, "Propuesta de coordinación enviada al rival.")
         partido.save()
-    return redirect('coordinacion')
+    return redirect('coordinacion') 
