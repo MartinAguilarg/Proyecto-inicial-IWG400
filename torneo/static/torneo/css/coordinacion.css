@@ -1,0 +1,137 @@
+/* Tarjeta principal de cada partido */
+.partido-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* Contenedor de enlaces a Google Maps */
+.maps-container {
+    background-color: #e3f2fd;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.maps-container a {
+    color: #1976D2;
+    text-decoration: none;
+}
+
+/* Propuesta actual */
+.propuesta-actual {
+    background-color: #fff9c4;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border-left: 4px solid #FFC107;
+}
+
+.propuesta-titulo {
+    margin: 0 0 10px 0;
+}
+
+.propuesta-detalle {
+    margin: 5px 0;
+}
+
+/* Mensaje mientras se espera una respuesta */
+.esperando-respuesta {
+    background-color: #e3f2fd;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.esperando-respuesta p {
+    margin: 0;
+    color: #1976D2;
+}
+
+/* Botones para aceptar o rechazar */
+.acciones-propuesta {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.boton-aceptar,
+.boton-rechazar,
+.boton-enviar {
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.boton-aceptar {
+    background-color: #4CAF50;
+    flex-grow: 1;
+}
+
+.boton-rechazar {
+    background-color: #f44336;
+    flex-grow: 1;
+}
+
+/* Mensaje que indica a quién le corresponde proponer */
+.turno-propuesta {
+    background-color: #e8f5e9;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.turno-propuesta p {
+    margin: 0;
+    color: #2e7d32;
+}
+
+/* Formulario para proponer los detalles del partido */
+.formulario-propuesta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.formulario-propuesta input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.formulario-propuesta .campo-lugar {
+    width: 180px;
+}
+
+.formulario-propuesta .campo-color {
+    width: 160px;
+}
+
+.boton-enviar {
+    background-color: #2196F3;
+}
+
+/* Mensaje de partido confirmado */
+.partido-confirmado {
+    color: green;
+}
+
+/* Mensaje cuando no hay partidos en coordinación */
+.sin-partidos {
+    text-align: center;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.sin-partidos p {
+    color: #666;
+    font-size: 1.1em;
+}
