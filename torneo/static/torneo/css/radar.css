@@ -1,0 +1,30 @@
+
+/* Contenedor principal de las tarjetas */
+.radar-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Estilo general de las tarjetas */
+.radar-card {
+    padding: 15px;
+    border-radius: 8px;
+    width: 30%;
+    border: 2px solid;
+}
+
+/* El Duelo a tu nivel */
+.duelo {
+    border-color: #4CAF50;
+}
+
+/* El Riesgoso */
+.riesgoso {
+    border-color: #FF9800;
+}
+
+/* El Jefe */
+.jefe {
+    border-color: #F44336;
+}
