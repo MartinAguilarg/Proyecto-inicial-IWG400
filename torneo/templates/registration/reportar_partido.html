@@ -1,16 +1,32 @@
-<h2>Reportar resultado: {{ partido.equipo_1.nombre }} vs {{ partido.equipo_2.nombre }}</h2>
+{% extends 'registration/base.html' %}
+{% load static %}
 
-<form method="post">
-  {% csrf_token %}
-  
-  <label>Goles de {{ partido.equipo_1.nombre }}:</label>
-  <input type="number" name="goles_1" min="0" required>
-  
-  <br><br>
-  
-  <label>Goles de {{ partido.equipo_2.nombre }}:</label>
-  <input type="number" name="goles_2" min="0" required>
-  
-  <br><br>
-  <button type="submit">Guardar Resultado y Calcular Elo</button>
-</form>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'torneo/css/reportar_partido.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="reportar-container">
+    <h2 class="reportar-titulo">
+        Reportar resultado: {{ partido.equipo_1.nombre }} vs {{ partido.equipo_2.nombre }}
+    </h2>
+
+    <form method="post" class="reportar-form">
+        {% csrf_token %}
+
+        <div class="reportar-campo">
+            <label for="goles_1">Goles de {{ partido.equipo_1.nombre }}:</label>
+            <input type="number" id="goles_1" name="goles_1" min="0" required>
+        </div>
+
+        <div class="reportar-campo">
+            <label for="goles_2">Goles de {{ partido.equipo_2.nombre }}:</label>
+            <input type="number" id="goles_2" name="goles_2" min="0" required>
+        </div>
+
+        <button type="submit" class="reportar-boton">
+            Guardar Resultado y Calcular Elo
+        </button>
+    </form>
+</div>
+{% endblock %}

@@ -154,10 +154,11 @@ def perfil_equipo(request, equipo_id):
     
     return render(request, 'registration/perfil.html', contexto)
 
+
 @login_required
 def reportar_partido(request, partido_id):
     partido = get_object_or_404(Partido, id=partido_id)
-    
+
     if partido.estado == 'confirmado':
         messages.warning(request, "Este partido ya fue confirmado y los puntos Elo fueron asignados.")
         return redirect('inicio')
@@ -174,44 +175,75 @@ def reportar_partido(request, partido_id):
         goles_1 = int(request.POST.get('goles_1', 0))
         goles_2 = int(request.POST.get('goles_2', 0))
 
-        if es_capitan_1 and partido.estado in ['pendiente', 'disputa']:
+        # Guardar el resultado informado por el capitán correspondiente
+        if es_capitan_1:
             partido.goles_1_c1 = goles_1
             partido.goles_2_c1 = goles_2
-            partido.estado = 'esperando_c2'
-            partido.save()
-            messages.info(request, "Resultado enviado. Esperando confirmación del rival.")
-
-        elif es_capitan_2 and partido.estado == 'esperando_c2':
+        elif es_capitan_2:
             partido.goles_1_c2 = goles_1
             partido.goles_2_c2 = goles_2
 
-            if partido.goles_1_c1 == goles_1 and partido.goles_2_c1 == goles_2:
+        # Comprobar si ambos capitanes ya informaron el resultado
+        ambos_reportaron = (
+            partido.goles_1_c1 is not None
+            and partido.goles_2_c1 is not None
+            and partido.goles_1_c2 is not None
+            and partido.goles_2_c2 is not None
+        )
+
+        if ambos_reportaron:
+            if (
+                partido.goles_1_c1 == partido.goles_1_c2
+                and partido.goles_2_c1 == partido.goles_2_c2
+            ):
                 partido.goles_equipo_1 = goles_1
                 partido.goles_equipo_2 = goles_2
-                partido.estado = 'confirmado' 
+                partido.estado = 'confirmado'
                 partido.save()
-                
+
                 nuevo_elo_1, nuevo_elo_2 = calcular_elo(
-                    partido.equipo_1.elo, 
-                    partido.equipo_2.elo, 
-                    goles_1, 
-                    goles_2
+                    partido.equipo_1.elo,
+                    partido.equipo_2.elo,
+                    partido.goles_equipo_1,
+                    partido.goles_equipo_2
                 )
+
                 partido.equipo_1.elo = nuevo_elo_1
                 partido.equipo_2.elo = nuevo_elo_2
                 partido.equipo_1.save()
                 partido.equipo_2.save()
-                messages.success(request, "El resultado coincide. ¡Partido finalizado y ranking actualizado!")
+
+                messages.success(
+                    request,
+                    "El resultado coincide. ¡Partido finalizado y ranking actualizado!"
+                )
             else:
                 partido.estado = 'disputa'
                 partido.save()
-                messages.warning(request, "Los resultados no coinciden. El partido está en disputa.")
+                messages.warning(
+                    request,
+                    "Los resultados no coinciden. El partido está en disputa. "
+                    "Los capitanes pueden volver a reportar el resultado."
+                )
+
+        else:
+            # Esperar al capitán que todavía no ha reportado
+            if es_capitan_1:
+                partido.estado = 'esperando_c2'
+            else:
+                partido.estado = 'esperando_c1'
+
+            partido.save()
+            messages.info(
+                request,
+                "Resultado enviado. Esperando confirmación del capitán rival."
+            )
 
         return redirect('inicio')
 
     return render(request, 'registration/reportar_partido.html', {
-        'partido': partido, 
-        'es_capitan_1': es_capitan_1, 
+        'partido': partido,
+        'es_capitan_1': es_capitan_1,
         'es_capitan_2': es_capitan_2
     })
 

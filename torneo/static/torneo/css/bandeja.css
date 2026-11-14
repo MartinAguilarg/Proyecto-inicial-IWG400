@@ -1,0 +1,87 @@
+
+/* Contenedor general de la bandeja */
+.bandeja-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Tarjeta de cada desafío */
+.desafio-card {
+    border: 1px solid #ddd;
+    border-left: 5px solid #FF9800;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Información del desafío */
+.desafio-titulo {
+    margin-top: 0;
+    color: #333;
+}
+
+.desafio-elo {
+    margin: 5px 0;
+}
+
+.desafio-descripcion {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Botones de aceptar y rechazar */
+.desafio-acciones {
+    display: flex;
+    gap: 10px;
+}
+
+.desafio-enlace {
+    text-decoration: none;
+}
+
+.btn-aceptar,
+.btn-rechazar {
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-aceptar {
+    background-color: #4CAF50;
+}
+
+.btn-rechazar {
+    background-color: #f44336;
+}
+
+/* Mensaje cuando no hay desafíos */
+.desafio-vacio {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #fff;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+}
+
+.desafio-vacio-texto {
+    color: #666;
+    font-size: 1.1em;
+}
+
+.desafio-radar-enlace {
+    color: #2196F3;
+    text-decoration: none;
+    font-weight: bold;
+}
