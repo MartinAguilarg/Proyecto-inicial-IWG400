@@ -1,0 +1,49 @@
+/* Contenedor principal */
+.crear-equipo-container {
+    max-width: 450px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Título */
+.crear-equipo-titulo {
+    margin-top: 0;
+    color: #333;
+}
+
+/* Descripción */
+.crear-equipo-descripcion {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+/* Formulario */
+.crear-equipo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Campos del formulario */
+.crear-equipo-campos {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Botón de inscripción */
+.btn-crear-equipo {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1em;
+}

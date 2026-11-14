@@ -1,0 +1,31 @@
+/* Tabla del ranking */
+.ranking-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+/* Encabezado */
+.ranking-encabezado {
+    background-color: #333;
+    color: white;
+}
+
+.ranking-encabezado th {
+    padding: 10px;
+}
+
+/* Filas */
+.ranking-fila {
+    border-bottom: 1px solid #ddd;
+}
+
+.ranking-fila td {
+    padding: 10px;
+}
+
+/* Enlace al perfil del equipo */
+.ranking-enlace {
+    text-decoration: none;
+    color: #2196F3;
+}
