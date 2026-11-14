@@ -1,3 +1,4 @@
+
 {% extends 'registration/base.html' %}
 {% load static %}
 
@@ -13,46 +14,49 @@
 
     <div class="radar-card duelo">
         <h3>El Duelo a tu nivel</h3>
-        {% if duelo_justo %}
-            <p><strong>{{ duelo_justo.nombre }}</strong></p>
-            <p>Elo: {{ duelo_justo.elo }}</p>
-            <form method="post" action="{% url 'enviar_desafio' duelo_justo.id %}">
+
+        {% for equipo in duelo_justo %}
+            <p><strong>{{ equipo.nombre }}</strong></p>
+            <p>Elo: {{ equipo.elo }}</p>
+            <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
                 {% csrf_token %}
                 <button type="submit">Enviar Desafío</button>
             </form>
-        {% else %}
-            <p>No hay rivales disponibles.</p>
-        {% endif %}
+        {% empty %}
+            <p>No hay rivales de nivel similar.</p>
+        {% endfor %}
     </div>
 
     <div class="radar-card riesgoso">
         <h3>El Riesgoso</h3>
         <p><em>Gana poco, pierde mucho.</em></p>
-        {% if underdog %}
-            <p><strong>{{ underdog.nombre }}</strong></p>
-            <p>Elo: {{ underdog.elo }}</p>
-            <form method="post" action="{% url 'enviar_desafio' underdog.id %}">
+
+        {% for equipo in underdog %}
+            <p><strong>{{ equipo.nombre }}</strong></p>
+            <p>Elo: {{ equipo.elo }}</p>
+            <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
                 {% csrf_token %}
                 <button type="submit">Enviar Desafío</button>
             </form>
-        {% else %}
-            <p>No hay equipos por debajo de tu nivel.</p>
-        {% endif %}
+        {% empty %}
+            <p>No hay rivales entre 101 y 300 puntos de Elo por encima.</p>
+        {% endfor %}
     </div>
 
     <div class="radar-card jefe">
         <h3>El Jefe</h3>
         <p><em>Recompensa máxima.</em></p>
-        {% if jefe %}
-            <p><strong>{{ jefe.nombre }}</strong></p>
-            <p>Elo: {{ jefe.elo }}</p>
-            <form method="post" action="{% url 'enviar_desafio' jefe.id %}">
+
+        {% for equipo in jefe %}
+            <p><strong>{{ equipo.nombre }}</strong></p>
+            <p>Elo: {{ equipo.elo }}</p>
+            <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
                 {% csrf_token %}
                 <button type="submit">Enviar Desafío</button>
             </form>
-        {% else %}
-            <p>Eres el equipo con más Elo actual.</p>
-        {% endif %}
+        {% empty %}
+            <p>No hay rivales con más de 300 puntos de Elo por encima.</p>
+        {% endfor %}
     </div>
 
 </div>
