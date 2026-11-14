@@ -220,12 +220,24 @@ def radar_desafios(request):
     mi_equipo = get_object_or_404(Equipo, capitan=request.user)
     otros_equipos = Equipo.objects.exclude(id=mi_equipo.id)
 
-    duelo_justo = otros_equipos.annotate(
+    # Duelo a tu nivel: entre -100 y +100 puntos de Elo
+    duelo_justo = otros_equipos.filter(
+        elo__gte=mi_equipo.elo - 100,
+        elo__lte=mi_equipo.elo + 100
+    ).annotate(
         diferencia=Abs(F('elo') - mi_equipo.elo)
-    ).order_by('diferencia').first()
+    ).order_by('diferencia')
 
-    underdog = otros_equipos.filter(elo__lt=mi_equipo.elo).order_by('-elo').first()
-    jefe = otros_equipos.filter(elo__gt=mi_equipo.elo).order_by('-elo').first()
+    # El Riesgoso: entre 101 y 300 puntos por encima
+    underdog = otros_equipos.filter(
+        elo__gt=mi_equipo.elo + 100,
+        elo__lte=mi_equipo.elo + 300
+    ).order_by('elo')
+
+    # El Jefe: más de 300 puntos por encima
+    jefe = otros_equipos.filter(
+        elo__gt=mi_equipo.elo + 300
+    ).order_by('-elo')
 
     contexto = {
         'mi_equipo': mi_equipo,
@@ -233,7 +245,7 @@ def radar_desafios(request):
         'underdog': underdog,
         'jefe': jefe,
     }
-    
+
     return render(request, 'registration/radar.html', contexto)
 
 @login_required
@@ -241,10 +253,10 @@ def enviar_desafio(request, retado_id):
     if request.method == 'POST':
         mi_equipo = get_object_or_404(Equipo, capitan=request.user)
         equipo_retado = get_object_or_404(Equipo, id=retado_id)
-        
+
         Desafio.objects.create(retador=mi_equipo, retado=equipo_retado)
         messages.success(request, "¡Desafío enviado con éxito!")
-        
+
     return redirect('radar')
 
 @login_required
