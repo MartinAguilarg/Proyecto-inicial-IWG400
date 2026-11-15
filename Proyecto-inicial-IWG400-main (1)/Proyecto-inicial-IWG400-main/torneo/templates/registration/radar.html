@@ -1,0 +1,52 @@
+{% extends 'registration/base.html' %}
+<br>{% block content %}
+<h2>Radar de Desafíos - Equipo: {{ mi_equipo.nombre }} (Elo: {{ mi_equipo.elo }})</h2>
+
+<div style="display: flex; gap: 20px; margin-top: 20px;">
+    
+    <div style="border: 2px solid #4CAF50; padding: 15px; border-radius: 8px; width: 30%;">
+        <h3> El Duelo a tu nivel</h3>
+        {% if duelo_justo %}
+            <p><strong>{{ duelo_justo.nombre }}</strong></p>
+            <p>Elo: {{ duelo_justo.elo }}</p>
+            <form method="post" action="{% url 'enviar_desafio' duelo_justo.id %}">
+                {% csrf_token %}
+                <button type="submit">Enviar Desafío</button>
+            </form>
+        {% else %}
+            <p>No hay rivales disponibles.</p>
+        {% endif %}
+    </div>
+
+    <div style="border: 2px solid #FF9800; padding: 15px; border-radius: 8px; width: 30%;">
+        <h3> El Riesgoso</h3>
+        <p><em>Gana poco, pierde mucho.</em></p>
+        {% if underdog %}
+            <p><strong>{{ underdog.nombre }}</strong></p>
+            <p>Elo: {{ underdog.elo }}</p>
+            <form method="post" action="{% url 'enviar_desafio' underdog.id %}">
+                {% csrf_token %}
+                <button type="submit">Enviar Desafío</button>
+            </form>
+        {% else %}
+            <p>No hay equipos por debajo de tu nivel.</p>
+        {% endif %}
+    </div>
+
+    <div style="border: 2px solid #F44336; padding: 15px; border-radius: 8px; width: 30%;">
+        <h3> El Jefe</h3>
+        <p><em>Recompensa máxima.</em></p>
+        {% if jefe %}
+            <p><strong>{{ jefe.nombre }}</strong></p>
+            <p>Elo: {{ jefe.elo }}</p>
+            <form method="post" action="{% url 'enviar_desafio' jefe.id %}">
+                {% csrf_token %}
+                <button type="submit">Enviar Desafío</button>
+            </form>
+        {% else %}
+            <p>Eres el equipo con más Elo actual.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
