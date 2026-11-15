@@ -5,36 +5,78 @@
 <link rel="stylesheet" href="{% static 'torneo/css/inicio.css' %}">
 {% endblock %}
 
+{# Usa el contenedor ancho nuevo en vez del recuadro blanco angosto #}
+{% block container_class %}mb-main{% endblock %}
+
 {% block content %}
-<h2>Panel Principal</h2>
 
 {% if user.is_authenticated and es_capitan %}
-    <h3>Mis Partidos Activos</h3>
+
+    <h1 class="inicio-titulo">Hola, {{ user.first_name|default:user.username }}</h1>
+    {% if partidos_activos %}
+        <p class="inicio-sub">Tienes {{ partidos_activos|length }} partido{{ partidos_activos|length|pluralize }} pendiente{{ partidos_activos|length|pluralize }} de reporte.</p>
+    {% else %}
+        <p class="inicio-sub">Estás al día con tus reportes.</p>
+    {% endif %}
+
+    <h2 class="inicio-seccion">Mis partidos activos</h2>
 
     {% if partidos_activos %}
         <ul class="inicio-lista-partidos">
         {% for partido in partidos_activos %}
             <li class="inicio-partido">
-                <span><strong>{{ partido.equipo_1.nombre }}</strong> vs <strong>{{ partido.equipo_2.nombre }}</strong></span>
-                <a href="{% url 'reportar_partido' partido.id %}" class="inicio-btn-reportar">Reportar</a>
+                <span class="inicio-escudo inicio-escudo-1">{{ partido.equipo_1.nombre|slice:":2"|upper }}</span>
+                <span class="inicio-equipos">
+                    <strong>{{ partido.equipo_1.nombre }}</strong> vs <strong>{{ partido.equipo_2.nombre }}</strong>
+                </span>
+                <span class="inicio-escudo inicio-escudo-2">{{ partido.equipo_2.nombre|slice:":2"|upper }}</span>
+                <a href="{% url 'reportar_partido' partido.id %}" class="inicio-btn-reportar">Reportar resultado</a>
             </li>
         {% endfor %}
         </ul>
     {% else %}
-        <p class="inicio-mensaje">No tienes partidos pendientes de reporte actualmente.</p>
+        <section class="inicio-card inicio-vacio">
+            <div class="inicio-cancha">
+                <svg viewBox="0 0 400 190" role="img" aria-label="Cancha de fútbol con un balón rebotando">
+                    <g fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="2.5">
+                        <rect x="8" y="8" width="384" height="174" rx="4"/>
+                        <path d="M200 8v174"/><circle cx="200" cy="95" r="30"/>
+                        <rect x="8" y="48" width="56" height="94"/><rect x="336" y="48" width="56" height="94"/>
+                        <rect x="8" y="72" width="22" height="46"/><rect x="370" y="72" width="22" height="46"/>
+                    </g>
+                    <ellipse class="inicio-sombra" cx="200" cy="148" rx="16" ry="4" fill="#000"/>
+                    <g class="inicio-balon">
+                        <circle cx="200" cy="130" r="15" fill="#F5EFE6"/>
+                        <path d="M200 120l7 5-2.7 8h-8.6l-2.7-8z" fill="#1F2A24"/>
+                        <path d="M200 120v-5M207 125l5-2M204.3 133l3 4M195.7 133l-3 4M193 125l-5-2" stroke="#1F2A24" stroke-width="1.6" fill="none"/>
+                    </g>
+                </svg>
+            </div>
+            <div class="inicio-texto">
+                <h3>No tienes partidos pendientes de reporte</h3>
+                <p class="inicio-mensaje">Busca un rival de tu nivel o revisa los desafíos que te han enviado para dejar la fecha, la hora y la cancha confirmadas.</p>
+                <div class="inicio-botones">
+                    <a href="{% url 'radar' %}" class="inicio-btn inicio-btn-primario">Buscar rival</a>
+                    <a href="{% url 'bandeja_desafios' %}" class="inicio-btn inicio-btn-borde">Ver bandeja de desafíos</a>
+                </div>
+            </div>
+        </section>
     {% endif %}
 
 {% elif user.is_authenticated %}
     <!-- Vista para usuarios registrados que aún no tienen equipo -->
-    <div class="inicio-bienvenida">
-        <h3 class="inicio-bienvenida-titulo">¡Bienvenido a la liga! ⚽</h3>
+    <section class="inicio-card inicio-bienvenida">
+        <h1 class="inicio-bienvenida-titulo">¡Bienvenido a la liga! ⚽</h1>
         <p class="inicio-bienvenida-texto">Para empezar a desafiar a otros, primero debes registrar tu equipo.</p>
-        <a href="{% url 'crear_equipo' %}">
-            <button class="inicio-btn-crear">Crear mi Equipo Ahora</button>
-        </a>
-    </div>
+        <a href="{% url 'crear_equipo' %}" class="inicio-btn inicio-btn-primario">Crear mi equipo ahora</a>
+    </section>
 
 {% else %}
-    <p>Bienvenido. Utiliza el menú superior para navegar o iniciar sesión.</p>
+    <section class="inicio-card inicio-bienvenida">
+        <h1 class="inicio-bienvenida-titulo">Bienvenido a Matchball</h1>
+        <p class="inicio-bienvenida-texto">Usa el menú superior para ver el ranking o ingresar a tu cuenta.</p>
+        <a href="{% url 'login' %}" class="inicio-btn inicio-btn-primario">Ingresar</a>
+    </section>
 {% endif %}
+
 {% endblock %}

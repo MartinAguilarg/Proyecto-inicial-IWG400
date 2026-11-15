@@ -1,64 +1,119 @@
-/* Lista de partidos activos */
-.inicio-lista-partidos {
-    list-style-type: none;
-    padding: 0;
+/* inicio.css: estilos de la página de inicio (panel principal) */
+
+.inicio-titulo {
+    font: 700 44px/1 "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    margin: 0 0 6px;
+}
+.inicio-sub { margin: 0 0 28px; color: var(--texto-suave); }
+.inicio-seccion {
+    font: 700 24px/1.1 "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    margin: 0 0 14px;
 }
 
-/* Cada partido */
-.inicio-partido {
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
+/* ---------- Tarjeta base ---------- */
+.inicio-card {
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* ---------- Botones ---------- */
+.inicio-btn {
+    display: inline-flex;
     align-items: center;
-}
-
-/* Botón para reportar */
-.inicio-btn-reportar {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 15px;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    font: 600 16px "Barlow", system-ui, sans-serif;
     text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-/* Mensaje sin partidos pendientes */
-.inicio-mensaje {
-    color: #666;
-}
-
-/* Bienvenida para usuarios sin equipo */
-.inicio-bienvenida {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f9f9f9;
-    border: 1px dashed #ccc;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-/* Título de bienvenida */
-.inicio-bienvenida-titulo {
-    margin-top: 0;
-}
-
-/* Texto de bienvenida */
-.inicio-bienvenida-texto {
-    color: #555;
-    margin-bottom: 20px;
-}
-
-/* Botón para crear equipo */
-.inicio-btn-crear {
-    background-color: #2196F3;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    font-size: 1.1em;
-    font-weight: bold;
     cursor: pointer;
+    transition: background .2s, color .2s, transform .15s;
+}
+.inicio-btn:active { transform: translateY(1px); }
+.inicio-btn-primario { background: var(--naranja); color: var(--tinta); }
+.inicio-btn-primario:hover { background: var(--naranja-oscuro); color: #fff; }
+.inicio-btn-borde { border-color: var(--tinta); color: var(--tinta); background: transparent; }
+.inicio-btn-borde:hover { background: var(--tinta); color: var(--crema); }
+
+/* ---------- Estado vacío con cancha ---------- */
+.inicio-cancha {
+    background: var(--cancha);
+    display: grid;
+    place-items: center;
+    padding: 22px 20px 8px;
+}
+.inicio-cancha svg { width: 100%; max-width: 400px; height: auto; display: block; }
+
+.inicio-balon {
+    animation: inicio-rebote 1.3s cubic-bezier(.3, .1, .3, 1) .6s 3 both;
+}
+.inicio-sombra {
+    transform-origin: 200px 148px;
+    animation: inicio-sombra 1.3s cubic-bezier(.3, .1, .3, 1) .6s 3 both;
+}
+@keyframes inicio-rebote { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-34px); } }
+@keyframes inicio-sombra { 0%, 100% { transform: scale(1); opacity: .35; } 45% { transform: scale(.6); opacity: .15; } }
+
+.inicio-texto { padding: 22px 26px 28px; }
+.inicio-texto h3 {
+    font: 700 26px/1.1 "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    margin: 0 0 8px;
+}
+.inicio-mensaje { color: var(--texto-suave); max-width: 52ch; margin: 0 0 18px; }
+.inicio-botones { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ---------- Lista de partidos activos ---------- */
+.inicio-lista-partidos { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+
+.inicio-partido {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: 12px;
+}
+.inicio-equipos { flex: 1; min-width: 0; }
+
+.inicio-escudo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    flex: none;
+    color: #fff;
+    font: 700 16px "Barlow Condensed", Arial, sans-serif;
+}
+.inicio-escudo-1 { background: var(--azul-oscuro); }
+.inicio-escudo-2 { background: var(--verde-bosque); margin-left: -22px; border: 2px solid #fff; }
+
+.inicio-btn-reportar {
+    background: var(--naranja);
+    color: var(--tinta);
+    padding: 9px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background .2s, color .2s;
+}
+.inicio-btn-reportar:hover { background: var(--naranja-oscuro); color: #fff; }
+
+/* ---------- Bienvenida (sin equipo / visitante) ---------- */
+.inicio-bienvenida { text-align: center; padding: 48px 24px; max-width: 640px; margin: 24px auto 0; }
+.inicio-bienvenida-titulo {
+    font: 700 38px/1.05 "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    margin: 0 0 10px;
+}
+.inicio-bienvenida-texto { color: var(--texto-suave); margin: 0 0 22px; }
+
+/* ---------- Celular ---------- */
+@media (max-width: 640px) {
+    .inicio-titulo { font-size: 36px; }
+    .inicio-partido { flex-wrap: wrap; }
+    .inicio-btn-reportar { width: 100%; text-align: center; }
 }

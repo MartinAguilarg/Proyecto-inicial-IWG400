@@ -1,73 +1,116 @@
 {% extends 'registration/base.html' %}
 {% load static %}
 
+{% block title %}Sala de coordinación | Matchball{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'torneo/css/coordinacion.css' %}">
 {% endblock %}
 
 {% block content %}
-<h2>Sala de Coordinación</h2>
+<h2>Sala de coordinación</h2>
+<p class="mb-sub">Acuerda fecha, hora, cancha y camisetas con tu rival.</p>
 
+<div class="coord-lista">
 {% for partido in partidos %}
-    <div class="partido-card">
-        <h3>{{ partido.equipo_1.nombre }} vs {{ partido.equipo_2.nombre }}</h3>
+    <article class="partido-card">
 
-        <!-- Búsqueda de Google Maps por Comuna -->
+        <header class="coord-cabecera">
+            <div class="coord-equipos">
+                <span class="coord-escudos">
+                    <span class="mb-shield">{{ partido.equipo_1.nombre|slice:":2"|upper }}</span>
+                    <span class="mb-shield mb-shield--verde">{{ partido.equipo_2.nombre|slice:":2"|upper }}</span>
+                </span>
+                <h3>{{ partido.equipo_1.nombre }} <span class="coord-vs">vs</span> {{ partido.equipo_2.nombre }}</h3>
+            </div>
+
+            {% if partido.estado_coordinacion == 'propuesto' %}
+                {% if partido.proponente == user %}
+                    <span class="mb-tag mb-tag--warn">Esperando respuesta</span>
+                {% else %}
+                    <span class="mb-tag mb-tag--warn">Propuesta recibida</span>
+                {% endif %}
+            {% elif partido.estado_coordinacion == 'sin_fecha' %}
+                <span class="mb-tag">Sin fecha</span>
+            {% elif partido.estado_coordinacion == 'aceptado' %}
+                <span class="mb-tag mb-tag--ok">Confirmado</span>
+            {% endif %}
+        </header>
+
+        <!-- Búsqueda de Google Maps por comuna -->
         <div class="maps-container">
-            <strong>Buscar recintos cercanos:</strong><br>
-            <a href="https://www.google.com/maps/search/canchas+de+futbol+en+{{ partido.equipo_1.capitan.perfil.comuna }}" target="_blank">🗺️ En {{ partido.equipo_1.capitan.perfil.comuna }} (Local)</a> |
-            <a href="https://www.google.com/maps/search/canchas+de+futbol+en+{{ partido.equipo_2.capitan.perfil.comuna }}" target="_blank">🗺️ En {{ partido.equipo_2.capitan.perfil.comuna }} (Visita)</a>
+            <span>Buscar canchas cercanas:</span>
+            <a href="https://www.google.com/maps/search/canchas+de+futbol+en+{{ partido.equipo_1.capitan.perfil.comuna|urlencode }}" target="_blank" rel="noopener">{{ partido.equipo_1.capitan.perfil.comuna }} (local)</a>
+            <a href="https://www.google.com/maps/search/canchas+de+futbol+en+{{ partido.equipo_2.capitan.perfil.comuna|urlencode }}" target="_blank" rel="noopener">{{ partido.equipo_2.capitan.perfil.comuna }} (visita)</a>
         </div>
 
         {% if partido.estado_coordinacion == 'propuesto' %}
-            <!-- VISTA 1: Cuando ya hay una propuesta sobre la mesa -->
+            <!-- Hay una propuesta sobre la mesa -->
             <div class="propuesta-actual">
-                <p class="propuesta-titulo"><strong>Propuesta Actual:</strong></p>
-                <p class="propuesta-detalle">{{ partido.fecha_programada|date:"Y-m-d" }} a las ⏰ {{ partido.hora_programada }}</p>
-                <p class="propuesta-detalle"><strong>Cancha:</strong> {{ partido.lugar_acordado }}</p>
-                <p class="propuesta-detalle"><strong>Camisetas:</strong> {{ partido.equipo_1.nombre }} ({{ partido.color_equipo_1 }}) | {{ partido.equipo_2.nombre }} ({{ partido.color_equipo_2 }})</p>
+                <p class="propuesta-titulo">Propuesta actual</p>
+                <dl class="propuesta-grid">
+                    <div><dt>Fecha</dt><dd>{{ partido.fecha_programada|date:"d/m/Y" }}</dd></div>
+                    <div><dt>Hora</dt><dd>{{ partido.hora_programada }}</dd></div>
+                    <div><dt>Cancha</dt><dd>{{ partido.lugar_acordado }}</dd></div>
+                    <div><dt>Camisetas</dt><dd>{{ partido.equipo_1.nombre }} ({{ partido.color_equipo_1 }}) y {{ partido.equipo_2.nombre }} ({{ partido.color_equipo_2 }})</dd></div>
+                </dl>
             </div>
 
             {% if partido.proponente == user %}
-                <!-- VISTA 1A: Si yo envié la propuesta, debo esperar -->
+                <!-- Yo envié la propuesta: toca esperar -->
                 <div class="esperando-respuesta">
                     <p><strong>Esperando respuesta del rival...</strong></p>
                 </div>
             {% else %}
-                <!-- VISTA 1B: Si el rival envió la propuesta, yo puedo aceptar o rechazar -->
+                <!-- El rival envió la propuesta: puedo aceptar o rechazar -->
                 <form method="post" action="{% url 'proponer_horario' partido.id %}" class="acciones-propuesta">
                     {% csrf_token %}
-                    <button type="submit" name="aceptar" value="1" class="boton-aceptar">✅ Aceptar Propuesta</button>
-                    <button type="submit" name="rechazar" value="1" class="boton-rechazar">❌ Rechazar / Contraofertar</button>
+                    <button type="submit" name="aceptar" value="1" class="mb-btn mb-btn--ok">Aceptar propuesta</button>
+                    <button type="submit" name="rechazar" value="1" class="mb-btn mb-btn--danger">Rechazar / contraofertar</button>
                 </form>
             {% endif %}
 
         {% elif partido.estado_coordinacion == 'sin_fecha' %}
-            <!-- VISTA 2: Cuando no hay propuesta o acaba de ser rechazada (Formulario vacío) -->
+            <!-- Sin propuesta, o recién rechazada: formulario vacío -->
             <div class="turno-propuesta">
-                <p><strong>Es tu turno:</strong> Define los detalles del partido para enviarle una propuesta al rival.</p>
+                <p><strong>Es tu turno:</strong> define los detalles del partido para enviarle una propuesta al rival.</p>
             </div>
 
             <form method="post" action="{% url 'proponer_horario' partido.id %}" class="formulario-propuesta">
                 {% csrf_token %}
-                <input type="date" name="fecha" required>
-                <input type="time" name="hora" required>
-                <input type="text" name="lugar" placeholder="Nombre de la cancha" required class="campo-lugar">
-
-                <input type="text" name="color_1" placeholder="Color de {{ partido.equipo_1.nombre }}" required class="campo-color">
-                <input type="text" name="color_2" placeholder="Color de {{ partido.equipo_2.nombre }}" required class="campo-color">
-
-                <button type="submit" class="boton-enviar">Enviar Propuesta</button>
+                <div class="campo">
+                    <label for="fecha-{{ partido.id }}">Fecha</label>
+                    <input type="date" id="fecha-{{ partido.id }}" name="fecha" required>
+                </div>
+                <div class="campo">
+                    <label for="hora-{{ partido.id }}">Hora</label>
+                    <input type="time" id="hora-{{ partido.id }}" name="hora" required>
+                </div>
+                <div class="campo campo-lugar">
+                    <label for="lugar-{{ partido.id }}">Cancha</label>
+                    <input type="text" id="lugar-{{ partido.id }}" name="lugar" placeholder="Nombre de la cancha" required>
+                </div>
+                <div class="campo">
+                    <label for="color1-{{ partido.id }}">Camiseta de {{ partido.equipo_1.nombre }}</label>
+                    <input type="text" id="color1-{{ partido.id }}" name="color_1" placeholder="Ej: Rojo" required>
+                </div>
+                <div class="campo">
+                    <label for="color2-{{ partido.id }}">Camiseta de {{ partido.equipo_2.nombre }}</label>
+                    <input type="text" id="color2-{{ partido.id }}" name="color_2" placeholder="Ej: Azul" required>
+                </div>
+                <button type="submit" class="mb-btn mb-btn--primary boton-enviar">Enviar propuesta</button>
             </form>
 
         {% elif partido.estado_coordinacion == 'aceptado' %}
-            <!-- Fallback visual (aunque filtrado en la vista) -->
-            <p class="partido-confirmado"><strong>Partido Confirmado.</strong> Revisa la pestaña de Calendario.</p>
+            <!-- Respaldo visual (la vista normalmente ya lo filtra) -->
+            <p class="partido-confirmado"><strong>Partido confirmado.</strong> Revisa la pestaña de calendario.</p>
         {% endif %}
-    </div>
+    </article>
 {% empty %}
-    <div class="sin-partidos">
+    <div class="mb-empty">
         <p>No tienes partidos en proceso de coordinación en este momento.</p>
+        <a href="{% url 'radar' %}" class="mb-btn mb-btn--primary">Buscar rival</a>
     </div>
 {% endfor %}
+</div>
 {% endblock %}

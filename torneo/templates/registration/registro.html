@@ -1,23 +1,25 @@
 {% extends 'registration/base.html' %}
 {% load static %}
 
+{% block title %}Registro | Matchball{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'torneo/css/registro.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="registro-container">
-    <h2 class="registro-title">📝 Registro de Capitán</h2>
+<div class="mb-narrow mb-card registro-container">
+    <h2 class="registro-title">Registro de capitán</h2>
 
     <form method="post" class="registro-form">
         {% csrf_token %}
 
-        <!-- Renderizado de campos con los estilos base de Django -->
-        <div class="form-fields">
+        <!-- Campos generados por Django -->
+        <div class="mb-form form-fields">
             {{ form.as_p }}
         </div>
 
-        <button type="submit" class="registro-submit">Registrarse</button>
+        <button type="submit" class="mb-btn mb-btn--primary mb-btn--block registro-submit">Registrarse</button>
     </form>
 
     <p class="registro-login">

@@ -1,36 +1,36 @@
 {% extends 'registration/base.html' %}
 {% load static %}
 
+{% block title %}Bandeja de entrada | Matchball{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'torneo/css/bandeja.css' %}">
 {% endblock %}
 
 {% block content %}
-<h2>Bandeja de Entrada (Desafíos Recibidos)</h2>
+<h2>Bandeja de entrada</h2>
+<p class="mb-sub">Desafíos que otros equipos te han enviado.</p>
 
 <div class="bandeja-container">
     {% for desafio in desafios %}
         <div class="desafio-card">
-            <div>
-                <h3 class="desafio-titulo">⚔️ Reto de: {{ desafio.remitente.nombre }}</h3>
-                <p class="desafio-elo"><strong>Elo del rival:</strong> {{ desafio.remitente.elo }}</p>
+            <span class="mb-shield">{{ desafio.remitente.nombre|slice:":2"|upper }}</span>
+
+            <div class="desafio-info">
+                <h3 class="desafio-titulo">Reto de {{ desafio.remitente.nombre }}</h3>
+                <p class="desafio-elo">Elo del rival: <strong>{{ desafio.remitente.elo }}</strong></p>
                 <p class="desafio-descripcion">Te han desafiado a un partido. ¿Aceptas el reto?</p>
             </div>
 
             <div class="desafio-acciones">
-                <a href="{% url 'responder_desafio' desafio.id 'aceptar' %}" class="desafio-enlace">
-                    <button class="btn-aceptar">✅ Aceptar y Proponer Hora</button>
-                </a>
-
-                <a href="{% url 'responder_desafio' desafio.id 'rechazar' %}" class="desafio-enlace">
-                    <button class="btn-rechazar">❌ Rechazar</button>
-                </a>
+                <a href="{% url 'responder_desafio' desafio.id 'aceptar' %}" class="mb-btn mb-btn--ok">Aceptar y proponer hora</a>
+                <a href="{% url 'responder_desafio' desafio.id 'rechazar' %}" class="mb-btn mb-btn--danger">Rechazar</a>
             </div>
         </div>
     {% empty %}
-        <div class="desafio-vacio">
-            <p class="desafio-vacio-texto">No tienes desafíos pendientes en este momento.</p>
-            <a href="{% url 'radar' %}" class="desafio-radar-enlace">📡 Ir al Radar a buscar equipos</a>
+        <div class="mb-empty">
+            <p>No tienes desafíos pendientes en este momento.</p>
+            <a href="{% url 'radar' %}" class="mb-btn mb-btn--primary">Ir al radar a buscar equipos</a>
         </div>
     {% endfor %}
 </div>

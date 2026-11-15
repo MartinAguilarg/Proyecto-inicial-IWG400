@@ -1,0 +1,56 @@
+/* animaciones.css: movimiento sutil y consistente.
+   Reglas: solo opacity y transform, entre 150 y 400 ms, sin bucles infinitos.
+   Se carga al final, después de componentes.css. */
+
+/* ---------- 1. Entrada de la página: una sola animación, suave ---------- */
+@keyframes mb-entrada {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+}
+.mb-main { animation: mb-entrada .35s ease-out both; }
+
+/* ---------- 2. Botones: responden al cursor y al clic ---------- */
+.mb-btn:hover { transform: translateY(-1px); }
+.mb-btn:active { transform: translateY(1px); }   /* debe ir después del hover */
+
+/* ---------- 3. Menú de capitán: se abre con un pequeño desliz ---------- */
+@keyframes mb-menu {
+    from { opacity: 0; transform: translateY(-6px) scale(.98); }
+    to   { opacity: 1; transform: none; }
+}
+.mb-menu[open] .mb-menu-list { animation: mb-menu .18s ease-out both; transform-origin: top right; }
+
+/* ---------- 4. Avisos del sistema: entran desde arriba; los de éxito se retiran solos ---------- */
+@keyframes mb-aviso {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes mb-aviso-salida {
+    from { max-height: 120px; }
+    to   { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; border-width: 0; }
+}
+.messages .msg { animation: mb-aviso .35s ease-out both; }
+.messages .msg.msg_success {
+    overflow: hidden;
+    animation: mb-aviso .35s ease-out both, mb-aviso-salida .4s ease-in 5s forwards;
+}
+
+/* ---------- 5. Opcional: las tarjetas de una lista aparecen en cascada ----------
+   Viene apagado. Para activarlo, borra la línea que dice "ACTIVAR-INICIO"
+   y la que dice "ACTIVAR-FIN" (las dos marcan un comentario). */
+
+/* ACTIVAR-INICIO
+.bandeja-container > *, .calendario-container > *, .coord-lista > *,
+.radar-container > *, .inicio-lista-partidos > * { animation: mb-entrada .4s ease-out both; }
+.bandeja-container > :nth-child(2), .calendario-container > :nth-child(2), .coord-lista > :nth-child(2),
+.radar-container > :nth-child(2), .inicio-lista-partidos > :nth-child(2) { animation-delay: .06s; }
+.bandeja-container > :nth-child(3), .calendario-container > :nth-child(3), .coord-lista > :nth-child(3),
+.radar-container > :nth-child(3), .inicio-lista-partidos > :nth-child(3) { animation-delay: .12s; }
+.bandeja-container > :nth-child(n+4), .calendario-container > :nth-child(n+4), .coord-lista > :nth-child(n+4),
+.radar-container > :nth-child(n+4), .inicio-lista-partidos > :nth-child(n+4) { animation-delay: .18s; }
+ACTIVAR-FIN */
+
+/* ---------- Respeto a quien desactiva las animaciones en su sistema ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}

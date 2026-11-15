@@ -1,32 +1,38 @@
 {% extends 'registration/base.html' %}
 {% load static %}
 
+{% block title %}Ranking Global | Matchball{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'torneo/css/ranking.css' %}">
 {% endblock %}
 
 {% block content %}
-<h2>Ranking Global (Elo)</h2>
+<h2>Ranking Global</h2>
+<p class="mb-sub">Los equipos ordenados por puntaje Elo.</p>
 
-<table class="ranking-tabla">
-    <tr class="ranking-encabezado">
-        <th>Pos</th>
-        <th>Equipo</th>
-        <th>Elo</th>
-    </tr>
-
-    {% for equipo in equipos %}
-    <tr class="ranking-fila">
-        <td>#{{ forloop.counter }}</td>
-        <td>
-            <strong>
-                <a href="{% url 'perfil_equipo' equipo.id %}" class="ranking-enlace">
-                    {{ equipo.nombre }}
-                </a>
-            </strong>
-        </td>
-        <td>{{ equipo.elo }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="mb-table-wrap">
+    <table class="mb-table ranking-tabla">
+        <thead>
+            <tr class="ranking-encabezado">
+                <th class="col-pos">Pos</th>
+                <th>Equipo</th>
+                <th class="r">Elo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for equipo in equipos %}
+            <tr class="ranking-fila {% if forloop.counter <= 3 %}ranking-top-{{ forloop.counter }}{% endif %}">
+                <td><span class="ranking-pos">{{ forloop.counter }}</span></td>
+                <td>
+                    <a href="{% url 'perfil_equipo' equipo.id %}" class="ranking-enlace">{{ equipo.nombre }}</a>
+                </td>
+                <td class="r ranking-elo">{{ equipo.elo }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="c">Todavía no hay equipos en el ranking.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

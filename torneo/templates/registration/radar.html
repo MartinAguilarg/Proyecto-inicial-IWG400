@@ -1,64 +1,84 @@
-
 {% extends 'registration/base.html' %}
 {% load static %}
+
+{% block title %}Buscar partido | Matchball{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'torneo/css/radar.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<h2>Radar de Desafíos - Equipo: {{ mi_equipo.nombre }} (Elo: {{ mi_equipo.elo }})</h2>
+<h2>Radar de desafíos</h2>
+<div class="radar-equipo">
+    <span class="mb-shield mb-shield--naranja">{{ mi_equipo.nombre|slice:":2"|upper }}</span>
+    <span>Tu equipo: <strong>{{ mi_equipo.nombre }}</strong></span>
+    <span class="mb-tag">Elo {{ mi_equipo.elo }}</span>
+</div>
 
 <div class="radar-container">
 
-    <div class="radar-card duelo">
-        <h3>El Duelo a tu nivel</h3>
+    <section class="radar-card duelo">
+        <h3>El duelo a tu nivel</h3>
+        <p class="radar-nota">Rivales con un Elo parecido al tuyo.</p>
 
         {% for equipo in duelo_justo %}
-            <p><strong>{{ equipo.nombre }}</strong></p>
-            <p>Elo: {{ equipo.elo }}</p>
-            <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
-                {% csrf_token %}
-                <button type="submit">Enviar Desafío</button>
-            </form>
+            <div class="radar-rival">
+                <span class="mb-shield">{{ equipo.nombre|slice:":2"|upper }}</span>
+                <div class="radar-rival-info">
+                    <strong>{{ equipo.nombre }}</strong>
+                    <span>Elo {{ equipo.elo }}</span>
+                </div>
+                <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="mb-btn mb-btn--primary mb-btn--sm">Desafiar</button>
+                </form>
+            </div>
         {% empty %}
-            <p>No hay rivales de nivel similar.</p>
+            <p class="radar-vacio">No hay rivales de nivel similar.</p>
         {% endfor %}
-    </div>
+    </section>
 
-    <div class="radar-card riesgoso">
-        <h3>El Riesgoso</h3>
-        <p><em>Gana poco, pierde mucho.</em></p>
+    <section class="radar-card riesgoso">
+        <h3>El riesgoso</h3>
+        <p class="radar-nota">Gana poco, pierde mucho.</p>
 
         {% for equipo in underdog %}
-            <p><strong>{{ equipo.nombre }}</strong></p>
-            <p>Elo: {{ equipo.elo }}</p>
-            <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
-                {% csrf_token %}
-                <button type="submit">Enviar Desafío</button>
-            </form>
+            <div class="radar-rival">
+                <span class="mb-shield">{{ equipo.nombre|slice:":2"|upper }}</span>
+                <div class="radar-rival-info">
+                    <strong>{{ equipo.nombre }}</strong>
+                    <span>Elo {{ equipo.elo }}</span>
+                </div>
+                <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="mb-btn mb-btn--primary mb-btn--sm">Desafiar</button>
+                </form>
+            </div>
         {% empty %}
-            <p>No hay rivales entre 101 y 300 puntos de Elo por encima.</p>
+            <p class="radar-vacio">No hay rivales entre 101 y 300 puntos de Elo por encima.</p>
         {% endfor %}
-    </div>
+    </section>
 
-    <div class="radar-card jefe">
-        <h3>El Jefe</h3>
-        <p><em>Recompensa máxima.</em></p>
+    <section class="radar-card jefe">
+        <h3>El jefe</h3>
+        <p class="radar-nota">Recompensa máxima.</p>
 
         {% for equipo in jefe %}
-            <p><strong>{{ equipo.nombre }}</strong></p>
-            <p>Elo: {{ equipo.elo }}</p>
-            <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
-                {% csrf_token %}
-                <button type="submit">Enviar Desafío</button>
-            </form>
+            <div class="radar-rival">
+                <span class="mb-shield">{{ equipo.nombre|slice:":2"|upper }}</span>
+                <div class="radar-rival-info">
+                    <strong>{{ equipo.nombre }}</strong>
+                    <span>Elo {{ equipo.elo }}</span>
+                </div>
+                <form method="post" action="{% url 'enviar_desafio' equipo.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="mb-btn mb-btn--primary mb-btn--sm">Desafiar</button>
+                </form>
+            </div>
         {% empty %}
-            <p>No hay rivales con más de 300 puntos de Elo por encima.</p>
+            <p class="radar-vacio">No hay rivales con más de 300 puntos de Elo por encima.</p>
         {% endfor %}
-    </div>
+    </section>
 
 </div>
-
 {% endblock %}

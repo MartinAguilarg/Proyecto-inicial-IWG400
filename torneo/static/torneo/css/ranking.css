@@ -1,31 +1,15 @@
-/* Tabla del ranking */
-.ranking-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
+.ranking-tabla td, .ranking-tabla th { vertical-align: middle; }
+.ranking-tabla .col-pos { width: 72px; }
 
-/* Encabezado */
-.ranking-encabezado {
-    background-color: #333;
-    color: white;
+.ranking-pos {
+    display: inline-grid; place-items: center; min-width: 34px; height: 34px; padding: 0 6px;
+    border-radius: 50%; background: #ece6dc; color: var(--texto-suave);
+    font: 700 17px var(--display);
 }
+.ranking-top-1 .ranking-pos { background: var(--naranja); color: var(--tinta); }
+.ranking-top-2 .ranking-pos { background: var(--tinta); color: var(--crema); }
+.ranking-top-3 .ranking-pos { background: var(--naranja-suave); color: #8a4100; }
 
-.ranking-encabezado th {
-    padding: 10px;
-}
-
-/* Filas */
-.ranking-fila {
-    border-bottom: 1px solid #ddd;
-}
-
-.ranking-fila td {
-    padding: 10px;
-}
-
-/* Enlace al perfil del equipo */
-.ranking-enlace {
-    text-decoration: none;
-    color: #2196F3;
-}
+.ranking-enlace { color: var(--tinta); text-decoration: none; font-weight: 600; }
+.ranking-enlace:hover { color: var(--naranja-oscuro); text-decoration: underline; }
+.ranking-elo { font: 700 22px var(--display); }

@@ -8,48 +8,55 @@
 {% endblock %}
 
 {% block content %}
-<h2>Perfil de Capitán: {{ capitan.username }}</h2>
+
+<section class="perfil-hero">
+    <div>
+        <h2>{{ equipo.nombre }}</h2>
+        <p>Capitán: {{ capitan.username }}</p>
+    </div>
+    <div class="perfil-elo">
+        <strong>{{ equipo.elo }}</strong>
+        <span>Puntaje Elo</span>
+    </div>
+</section>
 
 <div class="perfil-fila">
-    <!-- Columna de Datos -->
-    <div class="perfil-tarjeta perfil-tarjeta--datos">
-        <h3>Ficha del Equipo</h3>
-        <p><strong>🛡️ Nombre:</strong> {{ equipo.nombre }}</p>
-        <p><strong>👥 Jugadores:</strong> {{ equipo.cantidad_jugadores }}</p>
-        <p><strong>⚽ Tipo:</strong> {{ equipo.get_tipo_display }}</p>
-        <p><strong>🎯 Nivel:</strong> {{ equipo.get_nivel_display }}</p>
-        <p><strong>📈 Puntaje Elo:</strong> {{ equipo.elo }}</p>
-        <p><strong>✉️ Correo:</strong> {{ capitan.email|default:"Sin email registrado" }}</p>
-        <p><strong>📱 Teléfono:</strong> {{ telefono }}</p>
-    </div>
+    <!-- Datos del equipo -->
+    <section class="perfil-tarjeta perfil-tarjeta--datos">
+        <h3>Ficha del equipo</h3>
+        <dl class="perfil-dl">
+            <div><dt>Nombre</dt><dd>{{ equipo.nombre }}</dd></div>
+            <div><dt>Jugadores</dt><dd>{{ equipo.cantidad_jugadores }}</dd></div>
+            <div><dt>Tipo</dt><dd>{{ equipo.get_tipo_display }}</dd></div>
+            <div><dt>Nivel</dt><dd>{{ equipo.get_nivel_display }}</dd></div>
+            <div><dt>Correo</dt><dd>{{ capitan.email|default:"Sin email registrado" }}</dd></div>
+            <div><dt>Teléfono</dt><dd>{{ telefono }}</dd></div>
+        </dl>
+    </section>
 
-    <!-- Columna de Estadísticas -->
-    <div class="perfil-tarjeta perfil-tarjeta--stats">
+    <!-- Estadísticas -->
+    <section class="perfil-tarjeta perfil-tarjeta--stats">
         <h3>Rendimiento</h3>
         <div class="perfil-stats">
-            <div>
-                <p><strong> Partidos:</strong> {{ partidos_jugados }}</p>
-                <p><strong> Victorias:</strong> {{ victorias }}</p>
-                <p><strong> Derrotas:</strong> {{ derrotas }}</p>
-            </div>
-            <div>
-                <p><strong> Empates:</strong> {{ empates }}</p>
-                <p><strong> Goles a Favor:</strong> {{ goles_a_favor }}</p>
-                <p><strong> Goles en Contra:</strong> {{ goles_en_contra }}</p>
-            </div>
+            <div class="perfil-stat"><strong>{{ partidos_jugados }}</strong><span>Partidos</span></div>
+            <div class="perfil-stat perfil-stat--ok"><strong>{{ victorias }}</strong><span>Victorias</span></div>
+            <div class="perfil-stat"><strong>{{ empates }}</strong><span>Empates</span></div>
+            <div class="perfil-stat perfil-stat--bad"><strong>{{ derrotas }}</strong><span>Derrotas</span></div>
+            <div class="perfil-stat"><strong>{{ goles_a_favor }}</strong><span>Goles a favor</span></div>
+            <div class="perfil-stat"><strong>{{ goles_en_contra }}</strong><span>Goles en contra</span></div>
         </div>
-    </div>
+    </section>
 </div>
 
-<h3>Historial de Partidos</h3>
-<!-- Tabla con Scroll -->
-<div class="historial-scroll">
-    <table class="historial-tabla">
+<h3>Historial de partidos</h3>
+<div class="mb-table-wrap historial-scroll">
+    <table class="mb-table historial-tabla">
         <thead>
             <tr>
                 <th>Local</th>
                 <th>Visita</th>
-                <th class="centrado">Resultado</th>
+                <th class="c">Marcador</th>
+                <th class="c">Resultado</th>
             </tr>
         </thead>
         <tbody>
@@ -62,17 +69,26 @@
                     <td>
                         {% if partido.equipo_2 == equipo %}<strong>{{ partido.equipo_2.nombre }}</strong>{% else %}{{ partido.equipo_2.nombre }}{% endif %}
                     </td>
-                    <td class="centrado"><strong>{{ partido.goles_equipo_1 }} - {{ partido.goles_equipo_2 }}</strong></td>
+                    <td class="c"><strong>{{ partido.goles_equipo_1 }} - {{ partido.goles_equipo_2 }}</strong></td>
+                    <td class="c">
+                        {% if partido.goles_equipo_1 == partido.goles_equipo_2 %}
+                            <span class="mb-tag">Empate</span>
+                        {% elif partido.equipo_1 == equipo %}
+                            {% if partido.goles_equipo_1 > partido.goles_equipo_2 %}<span class="mb-tag mb-tag--ok">Ganó</span>{% else %}<span class="mb-tag mb-tag--bad">Perdió</span>{% endif %}
+                        {% else %}
+                            {% if partido.goles_equipo_2 > partido.goles_equipo_1 %}<span class="mb-tag mb-tag--ok">Ganó</span>{% else %}<span class="mb-tag mb-tag--bad">Perdió</span>{% endif %}
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="3" class="historial-vacio">Este equipo aún no tiene partidos confirmados.</td>
+                    <td colspan="4" class="historial-vacio">Este equipo aún no tiene partidos confirmados.</td>
                 </tr>
             {% endif %}
         </tbody>
     </table>
 </div>
 
-<a href="{% url 'inicio' %}"><button class="btn-volver">Volver al Inicio</button></a>
+<a href="{% url 'inicio' %}" class="mb-btn mb-btn--outline">Volver al inicio</a>
 {% endblock %}

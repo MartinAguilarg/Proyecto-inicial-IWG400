@@ -1,38 +1,41 @@
 {% extends 'registration/base.html' %}
 {% load static %}
 
+{% block title %}Calendario | Matchball{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'torneo/css/calendario.css' %}">
 {% endblock %}
 
 {% block content %}
-<h2>📅 Mis Partidos Confirmados</h2>
+<h2>Mis partidos confirmados</h2>
+<p class="mb-sub">Fecha, hora y lugar de tus próximos partidos.</p>
 
 <div class="calendario-container">
     {% for partido in partidos %}
-    <div class="partido-card">
-        <div class="partido-fecha">
-            {{ partido.fecha_programada|date:"d M Y" }}
+    <article class="partido-card">
+        <div class="partido-cabecera">
+            <div class="partido-fecha">
+                <strong>{{ partido.fecha_programada|date:"d" }}</strong>
+                <span>{{ partido.fecha_programada|date:"M Y" }}</span>
+            </div>
+            <div class="partido-equipos">
+                <strong>{{ partido.equipo_1.nombre }}</strong> <span class="vs">vs</span> <strong>{{ partido.equipo_2.nombre }}</strong>
+            </div>
         </div>
 
-        <div class="partido-equipos">
-            <strong>{{ partido.equipo_1.nombre }}</strong> vs <strong>{{ partido.equipo_2.nombre }}</strong>
-        </div>
+        <dl class="partido-datos">
+            <div><dt>Hora</dt><dd>{{ partido.hora_programada }}</dd></div>
+            <div><dt>Lugar</dt><dd>{{ partido.lugar_acordado }}</dd></div>
+            <div><dt>Camisetas</dt><dd>{{ partido.color_equipo_1 }} vs {{ partido.color_equipo_2 }}</dd></div>
+        </dl>
 
-        <p class="partido-info"><strong>Hora:</strong> {{ partido.hora_programada }}</p>
-        <p class="partido-info"><strong>Lugar:</strong> {{ partido.lugar_acordado }}</p>
-        <p class="partido-colores">👕 {{ partido.color_equipo_1 }} vs {{ partido.color_equipo_2 }}</p>
-
-        <div class="partido-accion">
-            <a href="{% url 'reportar_partido' partido.id %}">
-                <button class="btn-reportar">Reportar Resultado</button>
-            </a>
-        </div>
-    </div>
+        <a href="{% url 'reportar_partido' partido.id %}" class="mb-btn mb-btn--primary mb-btn--block">Reportar resultado</a>
+    </article>
     {% empty %}
-    <div class="calendario-vacio">
-        <p class="calendario-vacio-texto">No tienes partidos confirmados próximamente.</p>
-        <a href="{% url 'coordinacion' %}" class="calendario-coordinacion-enlace">Ir a la Sala de Coordinación</a>
+    <div class="mb-empty calendario-vacio">
+        <p>No tienes partidos confirmados próximamente.</p>
+        <a href="{% url 'coordinacion' %}" class="mb-btn mb-btn--primary">Ir a la sala de coordinación</a>
     </div>
     {% endfor %}
 </div>

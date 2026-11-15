@@ -4,8 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matchball</title>
-    <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
+    <title>Matchball | Ingresar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'torneo/css/login.css' %}">
 </head>
 
 <body>
@@ -30,17 +34,17 @@
                     <p class="error">Usuario o contraseña incorrectos.</p>
                 {% endif %}
 
-                <input type="text" name="username" placeholder="Nombre de usuario" required>
+                <input type="text" name="username" placeholder="Nombre de usuario" autocomplete="username" aria-label="Nombre de usuario" required>
 
                 <div class="campo_password">
-                    <input type="password" name="password" id="password" placeholder="Contraseña" required>
-                    <button type="button" id="ver_password">👁</button>
+                    <input type="password" name="password" id="password" placeholder="Contraseña" autocomplete="current-password" aria-label="Contraseña" required>
+                    <button type="button" id="ver_password" aria-label="Mostrar u ocultar contraseña">👁</button>
                 </div>
 
                 <button type="submit" class="btn_login">Iniciar sesión</button>
             </form>
 
-            <a href="#" class="link">Recordar contraseña</a>
+            <a href="{% url 'password_reset' %}" class="link">Recordar contraseña</a>
             <p class="link">¿Todavía no tienes una cuenta? <a href="{% url 'registro' %}">Regístrate</a></p>
         </section>
     </main>

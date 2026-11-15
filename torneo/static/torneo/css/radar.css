@@ -1,30 +1,23 @@
+.radar-equipo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 24px; }
 
-/* Contenedor principal de las tarjetas */
-.radar-container {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-}
+.radar-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
 
-/* Estilo general de las tarjetas */
-.radar-card {
-    padding: 15px;
-    border-radius: 8px;
-    width: 30%;
-    border: 2px solid;
-}
+.radar-card { background: #fff; border: 1px solid var(--linea); border-top: 6px solid; border-radius: 14px; padding: 20px; }
+.radar-card h3 { margin: 0 0 2px; }
+.radar-nota { margin: 0 0 14px; color: var(--texto-suave); font-size: 15px; }
 
-/* El Duelo a tu nivel */
-.duelo {
-    border-color: #4CAF50;
-}
+.duelo { border-top-color: var(--cancha); }
+.riesgoso { border-top-color: var(--naranja); }
+.jefe { border-top-color: var(--rojo); }
 
-/* El Riesgoso */
-.riesgoso {
-    border-color: #FF9800;
-}
+.radar-rival { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--linea); }
+.radar-rival:first-of-type { border-top: 0; }
+.radar-rival-info { flex: 1; min-width: 0; }
+.radar-rival-info strong { display: block; line-height: 1.2; overflow-wrap: anywhere; }
+.radar-rival-info span { font-size: 14px; color: var(--texto-suave); }
+.radar-rival form { margin: 0; }
+.radar-vacio { margin: 0; color: var(--texto-suave); }
 
-/* El Jefe */
-.jefe {
-    border-color: #F44336;
+@media (max-width: 980px) {
+    .radar-container { grid-template-columns: 1fr; }
 }

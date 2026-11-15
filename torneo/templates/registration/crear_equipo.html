@@ -1,13 +1,15 @@
 {% extends 'registration/base.html' %}
 {% load static %}
 
+{% block title %}Inscribir equipo | Matchball{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'torneo/css/crear_equipo.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="crear-equipo-container">
-    <h2 class="crear-equipo-titulo">🛡️ Inscribir Nuevo Equipo</h2>
+<div class="mb-narrow mb-card crear-equipo-container">
+    <h2 class="crear-equipo-titulo">Inscribir nuevo equipo</h2>
 
     <p class="crear-equipo-descripcion">
         Cuéntanos sobre tu equipo. Tu puntaje de Elo inicial depende de la experiencia que elijas.
@@ -15,12 +17,12 @@
 
     <form method="post" class="crear-equipo-form">
         {% csrf_token %}
-        <div class="crear-equipo-campos">
+        <div class="mb-form crear-equipo-campos">
             {{ form.as_p }}
         </div>
 
-        <button type="submit" class="btn-crear-equipo">
-            Confirmar e Inscribir Equipo
+        <button type="submit" class="mb-btn mb-btn--primary mb-btn--block">
+            Confirmar e inscribir equipo
         </button>
     </form>
 </div>

@@ -1,31 +1,36 @@
 {% extends 'registration/base.html' %}
 {% load static %}
 
+{% block title %}Reportar resultado | Matchball{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'torneo/css/reportar_partido.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="reportar-container">
-    <h2 class="reportar-titulo">
-        Reportar resultado: {{ partido.equipo_1.nombre }} vs {{ partido.equipo_2.nombre }}
-    </h2>
+<div class="mb-narrow mb-card reportar-container">
+    <h2 class="reportar-titulo">Reportar resultado</h2>
+    <p class="reportar-subtitulo">{{ partido.equipo_1.nombre }} vs {{ partido.equipo_2.nombre }}</p>
 
     <form method="post" class="reportar-form">
         {% csrf_token %}
 
-        <div class="reportar-campo">
-            <label for="goles_1">Goles de {{ partido.equipo_1.nombre }}:</label>
-            <input type="number" id="goles_1" name="goles_1" min="0" required>
+        <div class="reportar-marcador">
+            <div class="reportar-campo">
+                <label for="goles_1">Goles de {{ partido.equipo_1.nombre }}</label>
+                <input type="number" id="goles_1" name="goles_1" min="0" inputmode="numeric" required>
+            </div>
+
+            <span class="reportar-guion" aria-hidden="true">-</span>
+
+            <div class="reportar-campo">
+                <label for="goles_2">Goles de {{ partido.equipo_2.nombre }}</label>
+                <input type="number" id="goles_2" name="goles_2" min="0" inputmode="numeric" required>
+            </div>
         </div>
 
-        <div class="reportar-campo">
-            <label for="goles_2">Goles de {{ partido.equipo_2.nombre }}:</label>
-            <input type="number" id="goles_2" name="goles_2" min="0" required>
-        </div>
-
-        <button type="submit" class="reportar-boton">
-            Guardar Resultado y Calcular Elo
+        <button type="submit" class="mb-btn mb-btn--primary mb-btn--block">
+            Guardar resultado y calcular Elo
         </button>
     </form>
 </div>
